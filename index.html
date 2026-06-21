@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#18201c" />
+    <title>沙盘三国策略 Demo</title>
+  </head>
+  <body>
+    <main id="app">
+      <canvas id="game-canvas" aria-label="三国风策略沙盘"></canvas>
+      <header id="top-bar" aria-live="polite"></header>
+      <aside id="left-panel"></aside>
+      <aside id="city-panel"></aside>
+      <section id="log-panel"></section>
+      <section id="overview-panel" hidden></section>
+      <div id="modal-root" hidden></div>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

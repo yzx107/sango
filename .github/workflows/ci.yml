@@ -33,6 +33,9 @@ jobs:
       - name: Agent protocol check
         run: npm run agent:check
 
+      - name: Asset manifest validation
+        run: npm run assets:validate
+
       - name: Build
         run: npm run build
 

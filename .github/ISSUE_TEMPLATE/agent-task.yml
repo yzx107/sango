@@ -70,6 +70,7 @@ body:
       description: Commands or visual checks required before handoff.
       value: |
         - npm run agent:check
+        - npm run assets:validate
         - npm run build
     validations:
       required: true

@@ -35,12 +35,14 @@
 
 - 工作位置：本地 workspace。
 - 主要职责：Three.js 游戏系统、数据模型、回合制、AI、战斗、性能、测试和构建。
-- 必须使用 Three.js game skill 套件：
+- 必须优先读取仓库内 fork 的 Three.js game skill：
+  - `skills/threejs-game/SKILL.md`
+- 如需外部技能辅助，再使用 Three.js game skill 套件：
   - `threejs-game-director`
   - `threejs-gameplay-systems`
   - `threejs-game-ui-designer`
   - `threejs-qa-release`
-  - 需要生成/接入图像时使用 `threejs-image-generator`
+- 需要新增或替换图片时，Codex 不直接调用生图服务；必须创建 `AssetRequest` 到 `.ai-bridge/assets/pending/`，由 Antigravity 或其他资产 worker 处理。
 - 优先修改：
   - `src/game/`
   - `src/render/`
@@ -56,6 +58,8 @@
 - `.ai-bridge/agent-status.md`：每个 agent 完成工作后写入的状态报告。
 - `.ai-bridge/loop-state.md`：自动 loop 的状态机，记录当前 owner、下一 owner 和状态。
 - `.ai-bridge/file-locks.md`：各 agent 当前可改和不可改的文件范围。
+- `.ai-bridge/schemas/`：任务、资产请求、报告和审查请求的 JSON Schema。
+- `.ai-bridge/{tasks,assets,reports,reviews}/`：自动化队列目录。
 - `public/assets/generated/manifest.json`：生成资产清单，是 UI 代码引用资产的事实来源。
 
 ## 工作流
@@ -71,6 +75,7 @@
    - 未完成项
 5. Codex 负责最终构建和测试：
    - `npm run agent:check`
+   - `npm run assets:validate`
    - `npm run build`
    - `npm run validate:data`
    - `npm test`
@@ -96,6 +101,10 @@
 - `agent:check` 对缺失协议文件和缺失资产引用会失败；对已知美术质量问题先警告，避免阻塞当前自动化。
 
 ## 资产规则
+
+- 所有新增图片需求都先写成 `AssetRequest` JSON，放入 `.ai-bridge/assets/pending/`。
+- 完成的资产必须写入 `public/assets/generated/manifest.json`，并包含 `file`、`purpose`、`size`、`format`、`mime`、`sha256` 和提示摘要。
+- Codex 使用 `npm run assets:validate` 验证文件存在、magic bytes、MIME、尺寸、sha256 和 manifest 一致性。
 
 - 君主头像稳定路径：
   - `public/assets/generated/rulers/liubei.png`

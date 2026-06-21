@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/yzx107/sango/.ai-bridge/schemas/review-request.schema.json",
+  "title": "Sango Review Request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "requester", "reviewer", "state", "scope", "questions", "createdAt"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^review-[a-z0-9][a-z0-9-]*$"
+    },
+    "requester": {
+      "enum": ["codex", "antigravity", "chatgpt", "user"]
+    },
+    "reviewer": {
+      "enum": ["chatgpt", "codex", "antigravity", "user"]
+    },
+    "state": {
+      "enum": ["pending", "in_progress", "completed", "failed"]
+    },
+    "scope": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "questions": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 4 },
+      "minItems": 1
+    },
+    "acceptance": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "result": {
+      "type": "string"
+    }
+  }
+}

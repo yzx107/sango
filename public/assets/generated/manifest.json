@@ -8,6 +8,8 @@
       "purpose": "liubei ruler portrait",
       "size": "1024x1024",
       "format": "PNG",
+      "mime": "image/png",
+      "sha256": "f67f83010116b02ba74beeb7236d9e44dc870ff1a995f12d5fa4607913c131a3",
       "promptSummary": "Authentic 8-bit NES pixel art portrait of Liu Bei, flat black background"
     },
     {
@@ -15,6 +17,8 @@
       "purpose": "caocao ruler portrait",
       "size": "1024x1024",
       "format": "PNG",
+      "mime": "image/png",
+      "sha256": "08994d0ea411dd0ee0535d34ca3e97862fc228a88152344e000adf0cfc048203",
       "promptSummary": "Authentic 8-bit NES pixel art portrait of Cao Cao, flat black background"
     },
     {
@@ -22,6 +26,8 @@
       "purpose": "sunjian ruler portrait",
       "size": "1024x1024",
       "format": "PNG",
+      "mime": "image/png",
+      "sha256": "9019b85e1604bd51bb95e3eb32610fa77bc6c4728fabca6e598274c8e435e7a1",
       "promptSummary": "Authentic 8-bit NES pixel art portrait of Sun Jian, flat black background"
     },
     {
@@ -29,6 +35,8 @@
       "purpose": "yuanshao ruler portrait",
       "size": "1024x1024",
       "format": "PNG",
+      "mime": "image/png",
+      "sha256": "fe0f160e9be8b8aade0a0a7035fb412848a034908be5331ceabb6af02dd95ddc",
       "promptSummary": "Authentic 8-bit NES pixel art portrait of Yuan Shao, flat black background"
     },
     {
@@ -36,6 +44,8 @@
       "purpose": "dongzhuo ruler portrait",
       "size": "1024x1024",
       "format": "PNG",
+      "mime": "image/png",
+      "sha256": "63ed73ed1bc3d938f984c73a7149b431c1bf82fcc0b880c3c7d1dd84b688eb40",
       "promptSummary": "Authentic 8-bit NES pixel art portrait of Dong Zhuo, flat black background"
     },
     {
@@ -43,6 +53,8 @@
       "purpose": "liuyan ruler portrait",
       "size": "1024x1024",
       "format": "PNG",
+      "mime": "image/png",
+      "sha256": "64d60ee8001942a617d6735f9a3a8bee4c62c41512e2469801d5aecf0c2b123e",
       "promptSummary": "Authentic 8-bit NES pixel art portrait of Liu Yan, flat black background"
     },
     {
@@ -50,6 +62,8 @@
       "purpose": "mateng ruler portrait",
       "size": "1024x1024",
       "format": "PNG",
+      "mime": "image/png",
+      "sha256": "cb9ddbf193737e959c83c62ac632d149ff93fbfbf736cdb95cd9fbd959a3ed05",
       "promptSummary": "Authentic 8-bit NES pixel art portrait of Ma Teng, flat black background"
     },
     {
@@ -57,6 +71,8 @@
       "purpose": "ruler selection background",
       "size": "1024x1024",
       "format": "PNG",
+      "mime": "image/png",
+      "sha256": "f503c6cd0e441684174f76c4f554e50a6b4c1c47428b348fa6f443b2a8458536",
       "promptSummary": "8-bit pixel art of an ancient Chinese map, retro NES strategy game background, grid map, no text"
     }
   ]

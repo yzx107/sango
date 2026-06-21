@@ -1,5 +1,26 @@
 # Sango Agent Bridge Plan
 
+## 当前 S0 任务：自动开发基础设施
+
+Owner: Codex Game Development Agent
+
+目标：建立 agentic engineering / harness engineering 的基础设施，不开发新玩法。
+
+范围：
+
+- 建立 `.ai-bridge/{tasks,assets,reports,reviews}/` 队列目录。
+- 用 `.ai-bridge/schemas/*.schema.json` 固化任务、AssetRequest、报告和审查请求合同。
+- 在 `skills/threejs-game/SKILL.md` 中 fork 项目本地 Three.js game skill。
+- 移除本地 skill 对 Gemini 生图的硬依赖：Codex 只创建 AssetRequest，Antigravity 或资产 worker 负责图片生成和 manifest 更新。
+- 增加 `npm run assets:validate`，检查文件存在、magic bytes、MIME、尺寸、sha256 和 manifest 一致性。
+- 编写 `docs/AUTOMATED_DEVELOPMENT.md` 作为自动 loop 操作说明。
+
+完成后：
+
+- Codex 运行 `npm run assets:validate`、`npm run agent:check`、`npm run build`。
+- Codex 更新 `.ai-bridge/agent-status.md`。
+- 提交并推送自动开发基础设施，等待 ChatGPT / user 审查。
+
 ## 当前协作模式
 
 - ChatGPT：通过 GitHub 远程读取仓库，负责需求拆解、代码/资产审查、验收意见。
@@ -15,6 +36,8 @@
 - 状态报告：`.ai-bridge/agent-status.md`
 - Loop 状态：`.ai-bridge/loop-state.md`
 - 文件锁：`.ai-bridge/file-locks.md`
+- 自动化说明：`docs/AUTOMATED_DEVELOPMENT.md`
+- 队列 Schema：`.ai-bridge/schemas/`
 - 资产清单：`public/assets/generated/manifest.json`
 
 ## 文件归属
@@ -29,6 +52,8 @@
 | `src/render/` | Codex | Three.js 场景、相机、地形、城池、军队、特效 |
 | `src/data/` | Codex | 城池、武将、势力、道路和剧本数据 |
 | `tests/` | Codex | 自动化验收 |
+| `.ai-bridge/schemas/` | Codex | 任务、AssetRequest、报告和审查请求合同 |
+| `.ai-bridge/assets/` | Antigravity + Codex | Antigravity 处理生成队列，Codex 创建请求和验证结果 |
 | `README.md` / `AGENTS.md` | Codex | 项目说明和协作协议 |
 
 ## 本轮约定
@@ -100,6 +125,7 @@ Codex 合并或提交前至少运行：
 ```bash
 npm run agent:loop
 npm run agent:check
+npm run assets:validate
 npm run build
 ```
 

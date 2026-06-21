@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/yzx107/sango/.ai-bridge/schemas/asset-request.schema.json",
+  "title": "Sango Asset Request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "owner", "provider", "state", "type", "purpose", "prompt", "targetPath", "expected", "createdAt"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^asset-[a-z0-9][a-z0-9-]*$"
+    },
+    "owner": {
+      "enum": ["antigravity"]
+    },
+    "provider": {
+      "enum": ["antigravity", "manual", "gemini", "procedural", "external"]
+    },
+    "state": {
+      "enum": ["pending", "in_progress", "completed", "failed"]
+    },
+    "type": {
+      "enum": ["portrait", "background", "ui-panel", "icon", "texture", "concept", "other"]
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 4
+    },
+    "prompt": {
+      "type": "string",
+      "minLength": 10
+    },
+    "negativePrompt": {
+      "type": "string"
+    },
+    "targetPath": {
+      "type": "string",
+      "pattern": "^public/assets/generated/.+\\.(png|jpg|jpeg|webp)$"
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mime", "width", "height"],
+      "properties": {
+        "mime": {
+          "enum": ["image/png", "image/jpeg", "image/webp"]
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "transparent": {
+          "type": "boolean"
+        }
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "path": { "type": "string" },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "mime": { "type": "string" },
+        "width": { "type": "integer" },
+        "height": { "type": "integer" }
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}

@@ -122,6 +122,18 @@
 - Open issues: 已全部按要求完成，未动及 `src/game/` 或 `src/data/` 等核心。
 - Next owner: Codex 负责构建、截图、canvas 检查和测试。
 
+## Agent Update - 2026-06-21 22:45
+
+- Owner: Antigravity Local Art/UI Agent
+- Goal: S0-ART-WORKER-BOOTSTRAP (配置为自动化视觉资产 Worker)
+- Files changed:
+  - 创建 `.ai-bridge/assets/pending` 等流转目录
+  - 编写 `.ai-bridge/assets/schema.md`
+  - `.ai-bridge/agent-status.md`
+- Assets changed: 无
+- Validation: 开启后台定时轮询任务（Cron Job），将每 3 分钟检查一次 `pending` 目录，自动承接 owner=antigravity 或 provider=auto 的任务。
+- Next owner: Codex (如果需要提需求，请将 json 放进 pending 目录)。
+
 ## Agent Update - 2026-06-21 21:35
 
 - Owner: Codex Game Development Agent
@@ -174,3 +186,25 @@
   - `npm run agent:check`: passed
   - `npm run build`: passed
 - Next owner: Codex 验证并推送；之后 ChatGPT Remote Reviewer 根据 `needs_review` 审查。
+
+## Agent Update - 2026-06-21 22:50
+
+- Owner: Codex Game Development Agent
+- Goal: S0-ORCHESTRATION-BOOTSTRAP，建立自动开发基础设施，不开发新玩法。
+- Files changed:
+  - `.ai-bridge/{tasks,assets,reports,reviews}/`
+  - `.ai-bridge/schemas/*.schema.json`
+  - `skills/threejs-game/SKILL.md`
+  - `scripts/assets-validate.mjs`
+  - `scripts/agent-check.mjs`
+  - `docs/AUTOMATED_DEVELOPMENT.md`
+  - `AGENTS.md` / `PROJECT_BRIEF.md` / `README.md`
+  - `.github/` agent 模板与 CI
+  - `public/assets/generated/manifest.json`
+- Assets changed: 未替换图片文件；仅为现有 manifest 补充 `mime` 和 `sha256`。
+- Validation:
+  - `npm run assets:validate`: passed
+  - `npm run agent:check`: passed
+  - `npm run build`: passed
+- Open issues: 未跑完整 Playwright 套件，因为本轮只提交自动开发基础设施且未改玩法/UI 运行代码。
+- Next owner: ChatGPT Remote Reviewer / user 审查自动化 diff；如需新图，Codex 创建 AssetRequest，Antigravity 执行。

@@ -10,6 +10,11 @@ Allowed:
 
 - `public/assets/generated/`
 - `public/assets/generated/manifest.json`
+- `.ai-bridge/assets/pending/`
+- `.ai-bridge/assets/in_progress/`
+- `.ai-bridge/assets/completed/`
+- `.ai-bridge/assets/failed/`
+- `.ai-bridge/assets/schema.md`
 - `src/styles.css`
 - `.ai-bridge/agent-status.md`
 - `.ai-bridge/loop-state.md`
@@ -25,6 +30,9 @@ Locked:
 - `src/render/`
 - `tests/`
 - `scripts/`
+- `.ai-bridge/schemas/`
+- `docs/AUTOMATED_DEVELOPMENT.md`
+- `skills/threejs-game/`
 
 ### Codex Game Development Agent
 
@@ -41,10 +49,13 @@ Allowed:
 - `AGENTS.md`
 - `.github/`
 - `.ai-bridge/`
+- `docs/`
+- `skills/`
 
 Avoid during Antigravity art pass:
 
 - `public/assets/generated/`
+- `.ai-bridge/assets/in_progress/`
 
 ### ChatGPT Remote Reviewer
 
@@ -61,6 +72,8 @@ Locked:
 
 - If a file is locked for your role, do not edit it.
 - If a locked file must change, update `.ai-bridge/current-plan.md` first with the reason and next owner.
+- New image needs must be expressed as `AssetRequest` files in `.ai-bridge/assets/pending/`; Codex must not overwrite in-progress asset outputs.
+- Antigravity must update `public/assets/generated/manifest.json` with `mime` and `sha256` whenever a generated asset changes.
 - Generated build/test output must not be committed:
   - `dist/`
   - `artifacts/`

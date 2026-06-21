@@ -23,6 +23,7 @@ npm run preview
 ```bash
 npm run agent:loop
 npm run agent:check
+npm run assets:validate
 npm run validate:data
 npm test
 npm run verify:visual
@@ -35,7 +36,7 @@ npm run inspect:canvas
 npm run assets:fallback
 ```
 
-当前已接入 Gemini 生成的君主头像与开局背景，清单见 `public/assets/generated/manifest.json`。
+当前君主头像与开局背景清单见 `public/assets/generated/manifest.json`。新增或替换图片请先创建 `.ai-bridge/assets/pending/` 下的 AssetRequest，再由美术 worker 生成并同步 manifest。
 
 ## 操作
 
@@ -78,7 +79,7 @@ npm run assets:fallback
 
 ## 已知问题
 
-- 当前美术资产来自 Gemini 生成文件；后续如继续迭代，应保持 `manifest.json` 与文件路径同步。
+- 美术资产迭代需要走 AssetRequest 队列，并保持 `manifest.json` 的 MIME、尺寸和 sha256 与真实文件同步。
 - AI 仍是轻量规则，不做深度战略搜索。
 - 外交只有关系数值占位，还没有谈判、同盟、劝降等操作。
 - 单挑是数值与小场景表现，还没有复杂动作拆招。

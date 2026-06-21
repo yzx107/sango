@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/yzx107/sango/.ai-bridge/schemas/task.schema.json",
+  "title": "Sango Agent Task",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "title", "owner", "state", "goal", "allowedFiles", "lockedFiles", "acceptance", "createdAt"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^task-[a-z0-9][a-z0-9-]*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 4
+    },
+    "owner": {
+      "enum": ["codex", "antigravity", "chatgpt"]
+    },
+    "state": {
+      "enum": ["todo", "in_progress", "needs_art", "needs_dev", "needs_review", "blocked", "done", "failed"]
+    },
+    "goal": {
+      "type": "string",
+      "minLength": 10
+    },
+    "allowedFiles": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "lockedFiles": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "acceptance": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "assetRequests": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^asset-[a-z0-9][a-z0-9-]*$" },
+      "uniqueItems": true
+    },
+    "reviewRequest": {
+      "type": "string",
+      "pattern": "^review-[a-z0-9][a-z0-9-]*$"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}

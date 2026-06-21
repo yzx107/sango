@@ -13,6 +13,7 @@
 # Validation
 
 - [ ] `npm run agent:check`
+- [ ] `npm run assets:validate`
 - [ ] `npm run build`
 - [ ] `npm run validate:data`
 - [ ] `npm test`
@@ -22,6 +23,8 @@
 # Asset Notes
 
 - [ ] `public/assets/generated/manifest.json` is updated when generated assets change.
+- [ ] New image needs were expressed as AssetRequest files under `.ai-bridge/assets/pending/`.
+- [ ] Manifest MIME, dimensions, and sha256 match the generated files.
 - [ ] No commercial game screenshots, ROM assets, logos, original text, or exact UI copies were added.
 - [ ] Image file extensions match real image encoding, or mismatch is explicitly recorded as a temporary issue.
 

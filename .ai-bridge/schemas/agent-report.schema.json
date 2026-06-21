@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/yzx107/sango/.ai-bridge/schemas/agent-report.schema.json",
+  "title": "Sango Agent Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "agent", "taskId", "state", "summary", "filesChanged", "validation", "createdAt"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^report-[a-z0-9][a-z0-9-]*$"
+    },
+    "agent": {
+      "enum": ["codex", "antigravity", "chatgpt"]
+    },
+    "taskId": {
+      "type": "string",
+      "pattern": "^task-[a-z0-9][a-z0-9-]*$"
+    },
+    "state": {
+      "enum": ["completed", "failed", "blocked", "handoff"]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 10
+    },
+    "filesChanged": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "assetsChanged": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "validation": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["command", "result"],
+        "properties": {
+          "command": { "type": "string" },
+          "result": { "enum": ["passed", "failed", "not_run", "blocked"] },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "openIssues": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "nextOwner": {
+      "enum": ["codex", "antigravity", "chatgpt", "user", "none"]
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

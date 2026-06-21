@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 
 const root = process.cwd();
@@ -15,6 +15,15 @@ function exists(relativePath) {
   const fullPath = path.join(root, relativePath);
   if (!existsSync(fullPath)) failures.push(`Missing required file: ${relativePath}`);
   return fullPath;
+}
+
+function checkDirectory(relativePath) {
+  const fullPath = path.join(root, relativePath);
+  if (!existsSync(fullPath)) {
+    failures.push(`Missing required directory: ${relativePath}`);
+    return;
+  }
+  if (!statSync(fullPath).isDirectory()) failures.push(`Required path is not a directory: ${relativePath}`);
 }
 
 function readText(relativePath) {
@@ -79,7 +88,7 @@ function checkPackageScripts() {
   const pkg = readJson('package.json');
   if (!pkg) return;
   const scripts = pkg.scripts ?? {};
-  for (const script of ['build', 'test', 'verify:visual', 'inspect:canvas', 'validate:data', 'agent:check', 'agent:loop']) {
+  for (const script of ['build', 'test', 'verify:visual', 'inspect:canvas', 'assets:validate', 'validate:data', 'agent:check', 'agent:loop']) {
     if (!scripts[script]) failures.push(`package.json missing script: ${script}`);
   }
 }
@@ -147,6 +156,13 @@ function main() {
     '.ai-bridge/agent-status.md',
     '.ai-bridge/loop-state.md',
     '.ai-bridge/file-locks.md',
+    '.ai-bridge/assets/schema.md',
+    '.ai-bridge/schemas/task.schema.json',
+    '.ai-bridge/schemas/asset-request.schema.json',
+    '.ai-bridge/schemas/agent-report.schema.json',
+    '.ai-bridge/schemas/review-request.schema.json',
+    'docs/AUTOMATED_DEVELOPMENT.md',
+    'skills/threejs-game/SKILL.md',
     'public/assets/generated/manifest.json',
     '.github/workflows/ci.yml',
     '.github/ISSUE_TEMPLATE/agent-task.yml',
@@ -155,11 +171,19 @@ function main() {
     exists(file);
   }
 
+  for (const queue of ['tasks', 'assets', 'reports', 'reviews']) {
+    for (const state of ['pending', 'in_progress', 'completed', 'failed']) {
+      checkDirectory(`.ai-bridge/${queue}/${state}`);
+    }
+  }
+
   checkRequiredText('PROJECT_BRIEF.md', ['霸王的大陆', '不复刻任何原作资产', 'Antigravity', 'Codex', 'ChatGPT']);
-  checkRequiredText('AGENTS.md', ['PROJECT_BRIEF.md', 'Antigravity', 'Codex Game Development Agent']);
-  checkRequiredText('.ai-bridge/current-plan.md', ['Owner: Antigravity Local Art/UI Agent', '完成后']);
+  checkRequiredText('AGENTS.md', ['PROJECT_BRIEF.md', 'Antigravity', 'Codex Game Development Agent', 'AssetRequest']);
+  checkRequiredText('.ai-bridge/current-plan.md', ['AssetRequest', 'assets:validate', '完成后']);
   checkRequiredText('.ai-bridge/loop-state.md', ['state:', 'current_owner:', 'needs_art']);
   checkRequiredText('.ai-bridge/file-locks.md', ['Current Locks', 'Locked']);
+  checkRequiredText('docs/AUTOMATED_DEVELOPMENT.md', ['AssetRequest', 'assets:validate', 'File Ownership Rules']);
+  checkRequiredText('skills/threejs-game/SKILL.md', ['removes any hard dependency on Gemini', 'AssetRequest', '.ai-bridge/assets/pending/']);
   checkPackageScripts();
   checkManifest();
 

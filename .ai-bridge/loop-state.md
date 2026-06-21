@@ -8,9 +8,9 @@ This file is the shared state machine for low-interruption agent collaboration.
 - current_owner: ChatGPT Remote Reviewer
 - next_owner: ChatGPT Remote Reviewer
 - remote_reviewer: ChatGPT Remote Reviewer
-- source_of_truth: GitHub main plus local `git status`
-- last_validated_local_state: S0.1 orchestration hardening branch
-- updated_at: 2026-06-21 23:17 Asia/Shanghai
+- source_of_truth: Draft PR for RFC-0001 plus local `git status`
+- last_validated_local_state: RFC-0001 documentation-only proposal
+- updated_at: 2026-06-21 23:35 Asia/Shanghai
 
 ## State Meanings
 
@@ -24,14 +24,15 @@ This file is the shared state machine for low-interruption agent collaboration.
 
 ## Current Sprint
 
-Goal: Review S0.1 orchestration hardening without disturbing the working game loop.
+Goal: Review RFC-0001, the proposed AI-driven living Three Kingdoms open world direction, without disturbing the working game loop, generated assets, or Phase 1 acceptance.
 
 Current review task:
 
-1. ChatGPT or the user reviews the S0.1 PR.
-2. If provider routing, queue validation, worker heartbeat, strict asset validation, and PR gate are acceptable, approve the PR.
-3. If asset worker behavior needs changes after approval, set `state: needs_art` and assign Antigravity.
-4. If scripts or CI need changes, set `state: needs_dev` and assign Codex.
+1. ChatGPT Remote Reviewer reviews the Draft PR, RFC boundaries, and bridge state.
+2. Antigravity reviews visual language, UX transition, and NPC intent/memory presentation through `.ai-bridge/reviews/pending/review-rfc-0001-antigravity-visual-ux.json`.
+3. Codex technical feasibility review is recorded in `.ai-bridge/reviews/completed/review-rfc-0001-codex-feasibility.json`.
+4. Project Owner decides whether to accept, revise, or reject the RFC.
+5. If accepted, split Milestone 1 into a separate implementation task; do not implement open-world code from this PR.
 
 Latest Codex validation:
 
@@ -41,12 +42,11 @@ npm run agent:check
 npm run queue:validate
 npm run assets:validate
 npm run build
-npm test
 ```
 
-Result: passed locally on 2026-06-21 for S0.1 branch.
+Result: documentation-only RFC branch; no gameplay source files, tests, generated assets, or dependency files should change.
 
-Scope note: no gameplay source files were changed in this S0.1 pass.
+Scope note: this branch adds an RFC and review/status metadata only.
 
 ## Automation Contract
 

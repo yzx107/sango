@@ -38,3 +38,16 @@
 所有的修改均按照“只生成素材、只修改视觉和 CSS，不乱动核心系统机制”的原则进行。当前仓库已经可以呈现出一个原汁原味的、融合了现代 3D 与低多边形机制的经典策略游戏垂直切片。
 
 等待人工代码审查。未作 commit 或 push 操作。
+
+## Agent Update - 2026-06-21 21:00
+
+- Owner: Codex Game Development Agent
+- Goal: 建立 ChatGPT / Antigravity / Codex 三 agent 协作机制。
+- Files changed:
+  - `AGENTS.md`
+  - `.ai-bridge/current-plan.md`
+  - `README.md`
+- Assets changed: 无。
+- Validation: 待运行 `npm run build`。
+- Open issues: Antigravity 若继续生成新一批美术资产，需要保持 `public/assets/generated/manifest.json` 与图片路径同步。
+- Next owner: Antigravity 可继续生成资产；ChatGPT 可通过 GitHub 远程读取 `AGENTS.md` 和 `.ai-bridge/current-plan.md` 审查流程。

@@ -61,6 +61,7 @@ npm run assets:fallback
 
 ## 扩展入口
 
+- Agent 协作协议：`AGENTS.md`、`.ai-bridge/current-plan.md`。
 - 剧本与存档版本：`src/data/scenarios.ts`。
 - 城池与道路：`src/data/cities.ts`、`src/data/mapGraph.ts`。
 - 武将：`src/data/generals.ts`。

@@ -1,4 +1,4 @@
-import { addLog, updateOutcome } from './GameState';
+import { addLog, resetPlayerOrders, updateOutcome } from './GameState';
 import { runAiTurn } from './AISystem';
 import { settleEconomy } from './EconomySystem';
 import type { BattleReport, GameState } from './types';
@@ -14,6 +14,7 @@ export class TurnManager {
     this.state.phase = 'settlement';
     settleEconomy(this.state);
     this.advanceDate();
+    resetPlayerOrders(this.state);
     updateOutcome(this.state);
     this.state.phase = 'player';
     addLog(this.state, `进入 ${this.state.year} 年 ${this.state.month} 月。`, 'info');

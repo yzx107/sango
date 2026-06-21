@@ -32,8 +32,8 @@ export class TerrainRenderer {
         (x < -15 && z < 0 ? 0.45 : 0);
       position.setXYZ(i, x, height, z);
 
-      const color = new THREE.Color(x > 11 ? '#5b805d' : z < -8 ? '#6f7659' : z > 13 ? '#436d52' : '#6d8754');
-      if (x < -13) color.lerp(new THREE.Color('#8a805f'), 0.35);
+      const color = new THREE.Color(x > 11 ? '#284f42' : z < -8 ? '#3d4634' : z > 13 ? '#244735' : '#344b35');
+      if (x < -13) color.lerp(new THREE.Color('#6d5a35'), 0.35);
       colors.push(color.r, color.g, color.b);
     }
 
@@ -53,7 +53,7 @@ export class TerrainRenderer {
 
   private createRoads(): THREE.Group {
     const group = new THREE.Group();
-    const material = new THREE.MeshStandardMaterial({ color: '#b89c68', roughness: 0.86 });
+    const material = new THREE.MeshStandardMaterial({ color: '#c69b43', roughness: 0.92 });
     for (const [a, b] of mapEdges) {
       const start = this.cities[a];
       const end = this.cities[b];
@@ -76,7 +76,7 @@ export class TerrainRenderer {
   private createRivers(): THREE.Group {
     const group = new THREE.Group();
     const material = new THREE.MeshStandardMaterial({
-      color: '#4aa6b5',
+      color: '#346e75',
       roughness: 0.38,
       metalness: 0,
       transparent: true,
@@ -98,7 +98,7 @@ export class TerrainRenderer {
   private createMountains(): THREE.Group {
     const group = new THREE.Group();
     const geometry = new THREE.ConeGeometry(0.75, 2.2, 5);
-    const material = new THREE.MeshStandardMaterial({ color: '#81745d', roughness: 0.95 });
+    const material = new THREE.MeshStandardMaterial({ color: '#6a5a3d', roughness: 0.95 });
     const total = mountainBelts.reduce((sum, belt) => sum + belt.count, 0);
     const mesh = new THREE.InstancedMesh(geometry, material, total);
     mesh.castShadow = true;
@@ -130,12 +130,12 @@ export class TerrainRenderer {
     const group = new THREE.Group();
     const foliage = new THREE.InstancedMesh(
       new THREE.ConeGeometry(0.34, 1.15, 6),
-      new THREE.MeshStandardMaterial({ color: '#2f5b38', roughness: 0.9 }),
+      new THREE.MeshStandardMaterial({ color: '#1f4d35', roughness: 0.9 }),
       forestBelts.reduce((sum, belt) => sum + belt.count, 0),
     );
     const trunks = new THREE.InstancedMesh(
       new THREE.CylinderGeometry(0.06, 0.08, 0.45, 5),
-      new THREE.MeshStandardMaterial({ color: '#5a3d28', roughness: 0.95 }),
+      new THREE.MeshStandardMaterial({ color: '#4a3323', roughness: 0.95 }),
       foliage.count,
     );
     const matrix = new THREE.Matrix4();

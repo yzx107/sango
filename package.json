@@ -9,7 +9,9 @@
     "preview": "vite preview --host 127.0.0.1",
     "test": "playwright test",
     "verify:visual": "playwright test tests/visual.spec.ts",
-    "inspect:canvas": "node scripts/inspect-threejs-canvas.mjs"
+    "inspect:canvas": "node scripts/inspect-threejs-canvas.mjs",
+    "assets:fallback": "node scripts/generate-retro-placeholders.mjs",
+    "validate:data": "playwright test tests/data.spec.ts"
   },
   "dependencies": {
     "three": "^0.184.0"

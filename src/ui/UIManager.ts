@@ -72,7 +72,7 @@ export class UIManager {
     this.modalRoot.innerHTML = `
       <div class="modal" role="dialog" aria-modal="true">
         <h2>${victory ? '统一完成' : '势力覆灭'}</h2>
-        <div class="result-banner">${victory ? '玄麒盟旗帜遍布全境。' : '最后一座城池失守，沙盘归于他人。'}</div>
+        <div class="result-banner">${victory ? `${state.factions[state.playerFactionId].name}旗帜遍布全境。` : '最后一座城池失守，沙盘归于他人。'}</div>
         <div class="modal-actions">
           <button type="button" data-restart>重新开局</button>
         </div>
@@ -102,6 +102,7 @@ export class UIManager {
     this.top.innerHTML = `
       <div class="era">${state.year}年 ${state.month}月 · 第${state.turn}回合 · ${faction.name}</div>
       <div class="resource-strip">
+        ${metric('命令书', `${state.ordersRemaining}/${state.ordersMax}`)}
         ${metric('城池', totals.cities)}
         ${metric('金钱', totals.gold)}
         ${metric('粮草', totals.grain)}
@@ -111,11 +112,13 @@ export class UIManager {
       <div class="top-actions">
         <button type="button" data-action="save">存档</button>
         <button type="button" data-action="load">读档</button>
+        <button type="button" data-action="restart">重新开局</button>
         <button type="button" data-action="end">结束回合</button>
       </div>
     `;
     this.top.querySelector<HTMLButtonElement>('[data-action="save"]')?.addEventListener('click', this.events.save);
     this.top.querySelector<HTMLButtonElement>('[data-action="load"]')?.addEventListener('click', this.events.load);
+    this.top.querySelector<HTMLButtonElement>('[data-action="restart"]')?.addEventListener('click', this.events.restart);
     this.top.querySelector<HTMLButtonElement>('[data-action="end"]')?.addEventListener('click', this.events.endTurn);
   }
 
@@ -183,6 +186,18 @@ export class UIManager {
     const state = this.state;
     if (!state) return;
     const source = state.cities[sourceId];
+    if (state.ordersRemaining <= 0) {
+      this.modalRoot.hidden = false;
+      this.modalRoot.innerHTML = `
+        <div class="modal" role="dialog" aria-modal="true">
+          <h2>${source.name} 出征</h2>
+          <div class="result-banner">命令书已尽，请结束回合。</div>
+          <div class="modal-actions"><button type="button" data-cancel>确认</button></div>
+        </div>
+      `;
+      this.modalRoot.querySelector<HTMLButtonElement>('[data-cancel]')?.addEventListener('click', () => this.closeModal());
+      return;
+    }
     const targets = enemyNeighbors(state, sourceId);
     const generals = source.generalIds.map((id) => state.generals[id]).filter((general) => general.available);
 

@@ -1,14 +1,15 @@
-export type FactionId = 'xuanqi' | 'canghe' | 'yueyao' | 'shulan' | 'beiyan' | 'xichui';
+export type FactionId = 'liubei' | 'caocao' | 'sunjian' | 'yuanshao' | 'dongzhuo' | 'liuyan' | 'mateng';
 
 export type RegionId =
-  | 'central'
+  | 'zhongyuan'
   | 'jiangdong'
   | 'bashu'
   | 'jingxiang'
   | 'hebei'
   | 'xiliang'
   | 'liaodong'
-  | 'nanman';
+  | 'nanman'
+  | 'guanzhong';
 
 export type TerrainKind = 'plain' | 'river' | 'mountain' | 'forest' | 'pass' | 'coast';
 
@@ -23,10 +24,15 @@ export type GameOutcome = 'playing' | 'victory' | 'defeat';
 export interface Faction {
   id: FactionId;
   name: string;
+  rulerId: string;
   color: string;
   banner: string;
   capitalId: string;
   style: string;
+  difficulty: '易' | '中' | '难';
+  description: string;
+  portrait: string;
+  selectable: boolean;
 }
 
 export interface CityData {
@@ -140,6 +146,9 @@ export interface BattleConfig {
 }
 
 export interface GameState {
+  schemaVersion: number;
+  scenarioId: string;
+  scenarioName: string;
   year: number;
   month: number;
   turn: number;
@@ -147,6 +156,8 @@ export interface GameState {
   mode: 'classic' | 'sandbox';
   outcome: GameOutcome;
   playerFactionId: FactionId;
+  ordersRemaining: number;
+  ordersMax: number;
   factions: Record<FactionId, Faction>;
   cities: Record<string, CityState>;
   generals: Record<string, GeneralState>;

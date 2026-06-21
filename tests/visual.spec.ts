@@ -53,15 +53,24 @@ test('renders a nonblank interactive game canvas', async ({ page }, testInfo) =>
   page.on('pageerror', (error) => pageErrors.push(error.message));
 
   await page.goto('/');
+  await expect(page.locator('#ruler-select')).toBeVisible();
+  await expect(page.locator('.ruler-card')).toHaveCount(7);
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 2);
+  expect(overflow).toBe(false);
+
+  await page.locator('[data-ruler="liubei"]').click();
+  await page.locator('[data-start]').click();
+  await expect(page.locator('#ruler-select')).toBeHidden();
   await expect(page.locator('#game-canvas')).toBeVisible();
   await page.waitForFunction(() => (window.__THREE_GAME_DIAGNOSTICS__?.frame ?? 0) > 10);
 
   const sample = await sampleCanvas(page);
   expect(sample, JSON.stringify(sample)).toMatchObject({ ok: true });
 
-  await expect(page.locator('#top-bar')).toContainText('玄麒盟');
-  await expect(page.locator('#city-panel')).toContainText('洛原');
-  await expect(page.locator('#log-panel')).toContainText('玄麒盟');
+  await expect(page.locator('#top-bar')).toContainText('刘备');
+  await expect(page.locator('#top-bar')).toContainText('命令书');
+  await expect(page.locator('#city-panel')).toContainText('平原');
+  await expect(page.locator('#log-panel')).toContainText('群雄初起');
 
   const beforeTurn = await page.evaluate(() => window.__THREE_GAME_DIAGNOSTICS__?.turn ?? 0);
   await page.locator('button[data-action="end"]').click();

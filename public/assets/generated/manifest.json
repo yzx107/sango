@@ -1,0 +1,55 @@
+{
+  "generatedAt": "2026-06-21T12:00:00Z",
+  "tool": "gemini-image-generator",
+  "blocker": null,
+  "assets": [
+    {
+      "file": "/assets/generated/rulers/liubei.png",
+      "purpose": "liubei ruler portrait",
+      "size": "1024x1024",
+      "promptSummary": "8-bit pixel art portrait of Liu Bei, retro NES game style"
+    },
+    {
+      "file": "/assets/generated/rulers/caocao.png",
+      "purpose": "caocao ruler portrait",
+      "size": "1024x1024",
+      "promptSummary": "8-bit pixel art portrait of Cao Cao, retro NES game style"
+    },
+    {
+      "file": "/assets/generated/rulers/sunjian.png",
+      "purpose": "sunjian ruler portrait",
+      "size": "1024x1024",
+      "promptSummary": "8-bit pixel art portrait of Sun Jian, retro NES game style"
+    },
+    {
+      "file": "/assets/generated/rulers/yuanshao.png",
+      "purpose": "yuanshao ruler portrait",
+      "size": "1024x1024",
+      "promptSummary": "8-bit pixel art portrait of Yuan Shao, retro NES game style"
+    },
+    {
+      "file": "/assets/generated/rulers/dongzhuo.png",
+      "purpose": "dongzhuo ruler portrait",
+      "size": "1024x1024",
+      "promptSummary": "8-bit pixel art portrait of Dong Zhuo, retro NES game style"
+    },
+    {
+      "file": "/assets/generated/rulers/liuyan.png",
+      "purpose": "liuyan ruler portrait",
+      "size": "1024x1024",
+      "promptSummary": "8-bit pixel art portrait of Liu Yan, retro NES game style"
+    },
+    {
+      "file": "/assets/generated/rulers/mateng.png",
+      "purpose": "mateng ruler portrait",
+      "size": "1024x1024",
+      "promptSummary": "8-bit pixel art portrait of Ma Teng, retro NES game style"
+    },
+    {
+      "file": "/assets/generated/backgrounds/ruler-select.png",
+      "purpose": "ruler selection background",
+      "size": "1024x1024",
+      "promptSummary": "8-bit pixel art background for a retro NES strategy game select screen"
+    }
+  ]
+}

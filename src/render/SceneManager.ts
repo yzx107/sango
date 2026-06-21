@@ -8,9 +8,9 @@ export class SceneManager {
 
   constructor(private readonly canvas: HTMLCanvasElement) {
     this.renderer = createRenderer(canvas);
-    this.renderer.toneMappingExposure = 1.08;
-    this.scene.background = new THREE.Color('#18201c');
-    this.scene.fog = new THREE.Fog('#18201c', 42, 86);
+    this.renderer.toneMappingExposure = 1.0;
+    this.scene.background = new THREE.Color('#0a0a09');
+    this.scene.fog = new THREE.Fog('#0a0a09', 30, 75);
     this.setupLights();
     this.resize();
   }
@@ -50,10 +50,10 @@ export class SceneManager {
   }
 
   private setupLights(): void {
-    const hemi = new THREE.HemisphereLight('#fff1cc', '#3c4939', 1.8);
+    const hemi = new THREE.HemisphereLight('#f2d78d', '#1d3028', 1.45);
     this.scene.add(hemi);
 
-    const sun = new THREE.DirectionalLight('#ffe1a3', 2.8);
+    const sun = new THREE.DirectionalLight('#e2c16b', 2.35);
     sun.position.set(-18, 26, 14);
     sun.castShadow = true;
     sun.shadow.mapSize.set(2048, 2048);
@@ -65,7 +65,7 @@ export class SceneManager {
     sun.shadow.camera.far = 72;
     this.scene.add(sun);
 
-    const rim = new THREE.DirectionalLight('#b9e4ff', 0.7);
+    const rim = new THREE.DirectionalLight('#7fb0a4', 0.55);
     rim.position.set(16, 12, -18);
     this.scene.add(rim);
   }

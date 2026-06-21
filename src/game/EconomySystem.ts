@@ -11,14 +11,19 @@ const actionNames: Record<DomesticAction | MilitaryAction, string> = {
   train: '训练',
 };
 
-export function applyDomesticAction(state: GameState, cityId: string, action: DomesticAction): string {
+export interface ActionResult {
+  ok: boolean;
+  message: string;
+}
+
+export function applyDomesticAction(state: GameState, cityId: string, action: DomesticAction): ActionResult {
   const city = state.cities[cityId];
-  if (!city || city.acted) return '本城本回合已行动。';
+  if (!city || city.acted) return { ok: false, message: '本城本回合已行动。' };
   const governor = cityGovernor(state, cityId);
   const politics = governor?.politics ?? 50;
   const effect = 2 + Math.floor(politics / 24);
   const cost = action === 'technology' ? 260 : action === 'defense' ? 230 : 180;
-  if (city.gold < cost) return '金钱不足，命令未能执行。';
+  if (city.gold < cost) return { ok: false, message: '金钱不足，命令未能执行。' };
 
   city.gold -= cost;
   city.acted = true;
@@ -40,17 +45,17 @@ export function applyDomesticAction(state: GameState, cityId: string, action: Do
 
   const text = `${city.name}${actionNames[action]}完成。`;
   addLog(state, text, 'good');
-  return text;
+  return { ok: true, message: text };
 }
 
-export function applyMilitaryAction(state: GameState, cityId: string, action: MilitaryAction): string {
+export function applyMilitaryAction(state: GameState, cityId: string, action: MilitaryAction): ActionResult {
   const city = state.cities[cityId];
-  if (!city || city.acted) return '本城本回合已行动。';
+  if (!city || city.acted) return { ok: false, message: '本城本回合已行动。' };
 
   if (action === 'recruit') {
     const recruits = Math.max(220, Math.floor(city.population * (0.012 + city.loyalty / 12000)));
     const cost = Math.ceil(recruits * 0.42);
-    if (city.gold < cost || city.population < recruits * 2) return '金钱或人口不足，无法征兵。';
+    if (city.gold < cost || city.population < recruits * 2) return { ok: false, message: '金钱或人口不足，无法征兵。' };
     city.gold -= cost;
     city.population -= recruits;
     city.troops += recruits;
@@ -58,19 +63,19 @@ export function applyMilitaryAction(state: GameState, cityId: string, action: Mi
     city.acted = true;
     const text = `${city.name}新募兵 ${recruits.toLocaleString()}。`;
     addLog(state, text, 'good');
-    return text;
+    return { ok: true, message: text };
   }
 
   const costGold = 170;
   const costGrain = 220;
-  if (city.gold < costGold || city.grain < costGrain) return '训练所需金粮不足。';
+  if (city.gold < costGold || city.grain < costGrain) return { ok: false, message: '训练所需金粮不足。' };
   city.gold -= costGold;
   city.grain -= costGrain;
   city.morale = clamp(city.morale + 8, 1, 100);
   city.acted = true;
   const text = `${city.name}整训军阵，士气提升。`;
   addLog(state, text, 'good');
-  return text;
+  return { ok: true, message: text };
 }
 
 export function settleEconomy(state: GameState): void {

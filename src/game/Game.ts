@@ -6,11 +6,12 @@ import { CityRenderer } from '../render/CityRenderer';
 import { EffectsRenderer } from '../render/EffectsRenderer';
 import { SceneManager } from '../render/SceneManager';
 import { TerrainRenderer } from '../render/TerrainRenderer';
+import { RulerSelectScreen } from '../ui/RulerSelectScreen';
 import { UIManager, type ExpeditionPayload } from '../ui/UIManager';
 import { createMarchOrder, resolveBattle } from './BattleSystem';
 import { isOwnCity } from './City';
 import { applyDomesticAction, applyMilitaryAction } from './EconomySystem';
-import { addLog, clearSave, createInitialState, loadGame, saveGame, updateOutcome } from './GameState';
+import { addLog, clearSave, consumePlayerOrder, createInitialState, loadGame, saveGame, updateOutcome } from './GameState';
 import { findPath } from './Pathfinding';
 import { TurnManager } from './TurnManager';
 import type { DomesticAction, GameOutcome, GameState, MilitaryAction } from './types';
@@ -21,6 +22,7 @@ export class Game {
   private readonly sceneManager: SceneManager;
   private readonly cameraController: CameraController;
   private readonly ui: UIManager;
+  private readonly rulerSelect: RulerSelectScreen;
   private readonly raycaster = new THREE.Raycaster();
   private readonly pointer = new THREE.Vector2();
   private readonly loop = new Loop(
@@ -52,11 +54,25 @@ export class Game {
       restart: () => this.restart(),
       setMode: (mode) => this.setMode(mode),
     });
+    this.rulerSelect = new RulerSelectScreen(this.getElement('ruler-select'), {
+      start: (factionId) => this.startNewGame(factionId),
+      load: () => this.load(),
+    });
+
+    const loaded = loadGame();
+    if (loaded) {
+      this.state = loaded;
+      this.turnManager = new TurnManager(this.state);
+    }
 
     this.buildWorld();
     this.canvas.addEventListener('pointermove', this.onPointerMove);
     this.canvas.addEventListener('click', this.onClick);
     this.markDirty();
+    if (!loaded) {
+      const message = localStorage.getItem('sango-strategy-demo-save-v1') ? '检测到旧版本虚构剧本存档，已安全忽略。' : '';
+      this.rulerSelect.show(this.state, message);
+    }
   }
 
   start(): void {
@@ -115,8 +131,11 @@ export class Game {
     window.__THREE_GAME_DIAGNOSTICS__ = {
       ...this.sceneManager.diagnostics(this.frame, Object.keys(this.state.cities).length, this.state.marches.length),
       turn: this.state.turn,
+      playerFactionId: this.state.playerFactionId,
       selectedCityId: this.state.selectedCityId,
       outcome: this.state.outcome,
+      ordersRemaining: this.state.ordersRemaining,
+      ordersMax: this.state.ordersMax,
     };
   }
 
@@ -136,18 +155,33 @@ export class Game {
 
   private handleDomestic(cityId: string, action: DomesticAction): void {
     if (!this.canActOnCity(cityId)) return;
-    applyDomesticAction(this.state, cityId, action);
+    if (!this.hasOrder()) return;
+    const result = applyDomesticAction(this.state, cityId, action);
+    if (!result.ok) {
+      addLog(this.state, result.message, 'warn');
+      this.markDirty();
+      return;
+    }
+    consumePlayerOrder(this.state);
     this.afterStateChange();
   }
 
   private handleMilitary(cityId: string, action: MilitaryAction): void {
     if (!this.canActOnCity(cityId)) return;
-    applyMilitaryAction(this.state, cityId, action);
+    if (!this.hasOrder()) return;
+    const result = applyMilitaryAction(this.state, cityId, action);
+    if (!result.ok) {
+      addLog(this.state, result.message, 'warn');
+      this.markDirty();
+      return;
+    }
+    consumePlayerOrder(this.state);
     this.afterStateChange();
   }
 
   private handleExpedition(payload: ExpeditionPayload): void {
     if (!this.canActOnCity(payload.sourceId)) return;
+    if (!this.hasOrder()) return;
     const order = createMarchOrder(
       this.state,
       payload.sourceId,
@@ -162,6 +196,7 @@ export class Game {
       return;
     }
     this.state.marches.push(order);
+    consumePlayerOrder(this.state);
     this.effectsRenderer?.setRoute([payload.sourceId, payload.targetId]);
     addLog(this.state, `${this.state.cities[payload.sourceId].name}发兵${this.state.cities[payload.targetId].name}。`, 'battle');
     this.afterStateChange();
@@ -191,13 +226,15 @@ export class Game {
   private load(): void {
     const loaded = loadGame();
     if (!loaded) {
-      addLog(this.state, '没有找到可读取的存档。', 'warn');
+      addLog(this.state, '没有找到可读取的历史剧本存档。', 'warn');
+      this.rulerSelect.show(this.state, '没有找到可读取的历史剧本存档。');
       this.markDirty();
       return;
     }
     this.state = loaded;
     this.turnManager = new TurnManager(this.state);
     this.buildWorld();
+    this.rulerSelect.hide();
     addLog(this.state, '存档已读取。', 'good');
     this.markDirty();
   }
@@ -208,6 +245,19 @@ export class Game {
     this.turnManager = new TurnManager(this.state);
     this.lastOutcome = 'playing';
     this.buildWorld();
+    this.rulerSelect.show(this.state, '请选择新的开局君主。');
+    this.markDirty();
+  }
+
+  private startNewGame(factionId: GameState['playerFactionId']): void {
+    clearSave();
+    this.state = createInitialState(factionId);
+    this.turnManager = new TurnManager(this.state);
+    this.lastOutcome = 'playing';
+    this.hoveredCityId = null;
+    this.buildWorld();
+    this.rulerSelect.hide();
+    saveGame(this.state);
     this.markDirty();
   }
 
@@ -221,6 +271,13 @@ export class Game {
     const city = this.state.cities[cityId];
     if (!city || this.state.outcome !== 'playing' || !isOwnCity(city, this.state.playerFactionId)) return false;
     return !city.acted;
+  }
+
+  private hasOrder(): boolean {
+    if (this.state.ordersRemaining > 0) return true;
+    addLog(this.state, '命令书已尽，请结束回合。', 'warn');
+    this.markDirty();
+    return false;
   }
 
   private afterStateChange(): void {
@@ -267,5 +324,11 @@ export class Game {
       object = object.parent;
     }
     return null;
+  }
+
+  private getElement(id: string): HTMLElement {
+    const element = document.getElementById(id);
+    if (!element) throw new Error(`Missing #${id}`);
+    return element;
   }
 }

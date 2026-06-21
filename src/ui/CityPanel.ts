@@ -23,7 +23,7 @@ export class CityPanel {
     const faction = state.factions[city.ownerId];
     const own = city.ownerId === state.playerFactionId;
     const governor = state.generals[city.governorId];
-    const disabled = !own || city.acted || state.outcome !== 'playing';
+    const disabled = !own || city.acted || state.outcome !== 'playing' || state.ordersRemaining <= 0;
     const generals = city.generalIds
       .map((id) => state.generals[id])
       .filter(Boolean)
@@ -47,6 +47,13 @@ export class CityPanel {
         ${stat('士气', city.morale)}
       </div>
       <div class="stat"><span>太守</span><strong>${governor ? governor.name : '待任命'}</strong></div>
+      ${
+        own && state.ordersRemaining <= 0
+          ? '<div class="result-banner">命令书已尽，请结束回合。</div>'
+          : city.acted
+            ? '<div class="result-banner">本城本回合已行动。</div>'
+            : ''
+      }
       <div class="action-grid">
         ${button('开发农业', 'domestic', 'agriculture', disabled)}
         ${button('开发商业', 'domestic', 'commerce', disabled)}

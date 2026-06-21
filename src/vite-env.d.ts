@@ -3,8 +3,11 @@
 interface ThreeGameDiagnostics {
   frame: number;
   turn?: number;
+  playerFactionId?: string;
   selectedCityId?: string | null;
   outcome?: string;
+  ordersRemaining?: number;
+  ordersMax?: number;
   cityCount: number;
   marchCount: number;
   renderer: {

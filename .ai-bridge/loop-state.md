@@ -6,11 +6,11 @@ This file is the shared state machine for low-interruption agent collaboration.
 
 - state: needs_review
 - current_owner: ChatGPT Remote Reviewer
-- next_owner: decided by review outcome
+- next_owner: Codex and Antigravity review comments
 - remote_reviewer: ChatGPT Remote Reviewer
-- source_of_truth: GitHub main plus local `git status`
-- last_validated_local_state: S0 orchestration bootstrap infrastructure
-- updated_at: 2026-06-21 22:50 Asia/Shanghai
+- source_of_truth: GitHub PR for RFC-0001
+- last_validated_local_state: RFC-0001 AI driven open world documentation proposal
+- updated_at: 2026-06-21 23:40 Asia/Shanghai
 
 ## State Meanings
 
@@ -24,16 +24,16 @@ This file is the shared state machine for low-interruption agent collaboration.
 
 ## Current Sprint
 
-Goal: Review S0 orchestration bootstrap without disturbing the working game loop.
+Goal: Review RFC-0001, the proposed AI-driven living Three Kingdoms open world direction, without disturbing the working game loop or Phase 1 art/UI scope.
 
 Current review task:
 
-1. ChatGPT or the user reviews the automatic development infrastructure diff on GitHub.
-2. If the queues, schemas, local skill fork, ownership rules, and `assets:validate` are acceptable, set `state: done`.
-3. If asset worker behavior needs changes, set `state: needs_art` and assign Antigravity.
-4. If scripts or CI need changes, set `state: needs_dev` and assign Codex.
+1. Codex comments on technical feasibility, migration path, and first spike scope.
+2. Antigravity comments on visual direction, UX, and double-layer world presentation.
+3. Project Owner decides whether to accept, revise, or reject the RFC.
+4. ChatGPT Remote Reviewer summarizes review outcomes and splits follow-up implementation tasks.
 
-Latest Codex validation:
+Latest validation expectation:
 
 ```bash
 npm run agent:check
@@ -41,9 +41,9 @@ npm run assets:validate
 npm run build
 ```
 
-Result: passed locally on 2026-06-21 for S0 infrastructure scope.
+Result: documentation-only RFC branch; no gameplay source files, tests, or generated assets should change.
 
-Scope note: no gameplay source files were changed in this S0 pass.
+Scope note: this branch adds an RFC and updates bridge state only.
 
 ## Automation Contract
 

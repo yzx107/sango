@@ -208,3 +208,16 @@
   - `npm run build`: passed
 - Open issues: 未跑完整 Playwright 套件，因为本轮只提交自动开发基础设施且未改玩法/UI 运行代码。
 - Next owner: ChatGPT Remote Reviewer / user 审查自动化 diff；如需新图，Codex 创建 AssetRequest，Antigravity 执行。
+
+## Agent Update - 2026-06-21 23:40
+
+- Owner: ChatGPT Remote Reviewer
+- Goal: RFC-0001-AI-OPEN-WORLD，提交仅文档的长期产品方向提案。
+- Files changed:
+  - `docs/rfcs/0001-ai-driven-open-world.md`
+  - `.ai-bridge/loop-state.md`
+  - `.ai-bridge/agent-status.md`
+- Assets changed: 无。
+- Validation: 文档-only；等待 GitHub Actions 与协作者评审。
+- Open issues: Codex 需评论技术迁移路径；Antigravity 需评论视觉/UX 方向；Project Owner 决定 Accept / Revise / Reject。
+- Next owner: Codex and Antigravity review comments, then ChatGPT Remote Reviewer 汇总。

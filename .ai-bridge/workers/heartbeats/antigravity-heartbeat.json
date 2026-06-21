@@ -1,0 +1,9 @@
+{
+  "id": "worker-antigravity-1",
+  "agent": "antigravity",
+  "state": "idle",
+  "providers": ["antigravity-native", "manual"],
+  "assetTypes": ["icon", "portrait", "background"],
+  "lastSeenAt": "2026-06-21T15:30:00.000Z",
+  "notes": "Antigravity completed asset-auto-provider-smoke-icon and is idle."
+}

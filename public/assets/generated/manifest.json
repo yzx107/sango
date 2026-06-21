@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-21T21:30:00Z",
+  "generatedAt": "2026-06-21T23:32:00Z",
   "tool": "gemini-image-generator",
   "blocker": null,
   "assets": [
@@ -74,6 +74,15 @@
       "mime": "image/png",
       "sha256": "f503c6cd0e441684174f76c4f554e50a6b4c1c47428b348fa6f443b2a8458536",
       "promptSummary": "8-bit pixel art of an ancient Chinese map, retro NES strategy game background, grid map, no text"
+    },
+    {
+      "file": "/assets/generated/ui/auto-provider-smoke.png",
+      "purpose": "Small original pixel-art bronze seal icon for verifying the provider=auto claim and heartbeat workflow.",
+      "size": "256x256",
+      "format": "PNG",
+      "mime": "image/png",
+      "sha256": "af66301aef1a8ded69ee4d24d1546b33b1ae4a4de3e1973206fe8ee917a899f3",
+      "promptSummary": "Original 8-bit inspired bronze seal icon for a Three Kingdoms strategy UI, square composition, hard-edge limited palette, no readable text, no logo, no copied commercial game layout."
     }
   ]
 }

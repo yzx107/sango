@@ -12,6 +12,7 @@
     "inspect:canvas": "node scripts/inspect-threejs-canvas.mjs",
     "assets:fallback": "node scripts/generate-retro-placeholders.mjs",
     "assets:validate": "node scripts/assets-validate.mjs",
+    "queue:validate": "node scripts/queue-validate.mjs",
     "validate:data": "playwright test tests/data.spec.ts",
     "agent:check": "node scripts/agent-check.mjs",
     "agent:loop": "node scripts/agent-loop.mjs"

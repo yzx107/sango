@@ -7,6 +7,7 @@ const root = process.cwd();
 const args = new Set(process.argv.slice(2));
 const shouldPull = args.has('--pull');
 const asJson = args.has('--json');
+const agentTaskLabel = 'agent-task';
 
 function run(command, commandArgs, options = {}) {
   const result = spawnSync(command, commandArgs, {
@@ -65,16 +66,18 @@ function nextAction(state) {
   }
 }
 
-function getLatestRun() {
+function getRepo() {
   const repo = run('gh', ['repo', 'view', '--json', 'nameWithOwner'], { quiet: true });
-  if (!repo.ok) return null;
-  let nameWithOwner = '';
   try {
-    nameWithOwner = JSON.parse(repo.stdout).nameWithOwner;
+    return repo.ok ? { ok: true, nameWithOwner: JSON.parse(repo.stdout).nameWithOwner } : { ok: false, error: repo.stderr || 'gh repo view failed' };
   } catch {
-    return null;
+    return { ok: false, error: 'Unable to parse gh repo view output' };
   }
-  const latest = run('gh', ['run', 'list', '--repo', nameWithOwner, '--limit', '1', '--json', 'databaseId,status,conclusion,workflowName,headSha,url'], {
+}
+
+function getLatestRun(repo) {
+  if (!repo.ok) return null;
+  const latest = run('gh', ['run', 'list', '--repo', repo.nameWithOwner, '--limit', '1', '--json', 'databaseId,status,conclusion,workflowName,headSha,url'], {
     quiet: true,
   });
   if (!latest.ok) return null;
@@ -85,23 +88,35 @@ function getLatestRun() {
   }
 }
 
-function getOpenAgentTasks() {
-  const repo = run('gh', ['repo', 'view', '--json', 'nameWithOwner'], { quiet: true });
-  if (!repo.ok) return [];
-  let nameWithOwner = '';
+function ensureAgentTaskLabel(repo) {
+  if (!repo.ok) return { status: 'unavailable', error: repo.error };
+  const list = run('gh', ['label', 'list', '--repo', repo.nameWithOwner, '--search', agentTaskLabel, '--json', 'name'], { quiet: true });
+  if (!list.ok) return { status: 'error', error: list.stderr || 'Unable to list GitHub labels' };
+  let labels = [];
   try {
-    nameWithOwner = JSON.parse(repo.stdout).nameWithOwner;
+    labels = list.stdout ? JSON.parse(list.stdout) : [];
   } catch {
-    return [];
+    return { status: 'error', error: 'Unable to parse GitHub labels' };
   }
-  const issues = run('gh', ['issue', 'list', '--repo', nameWithOwner, '--label', 'agent-task', '--state', 'open', '--limit', '5', '--json', 'number,title,url'], {
+  if (labels.some((label) => label.name === agentTaskLabel)) return { status: 'exists', name: agentTaskLabel };
+  const created = run('gh', ['label', 'create', agentTaskLabel, '--repo', repo.nameWithOwner, '--description', 'Sango agent task queue item', '--color', '5319e7'], {
     quiet: true,
   });
-  if (!issues.ok) return [];
+  if (!created.ok) return { status: 'error', error: created.stderr || `Unable to create ${agentTaskLabel} label` };
+  return { status: 'created', name: agentTaskLabel };
+}
+
+function getOpenAgentTasks(repo, labelStatus) {
+  if (!repo.ok) return { tasks: [], error: repo.error };
+  if (!['exists', 'created'].includes(labelStatus.status)) return { tasks: [], error: labelStatus.error || `${agentTaskLabel} label is unavailable` };
+  const issues = run('gh', ['issue', 'list', '--repo', repo.nameWithOwner, '--label', agentTaskLabel, '--state', 'open', '--limit', '5', '--json', 'number,title,url'], {
+    quiet: true,
+  });
+  if (!issues.ok) return { tasks: [], error: issues.stderr || `Unable to list issues labeled ${agentTaskLabel}` };
   try {
-    return JSON.parse(issues.stdout);
+    return { tasks: JSON.parse(issues.stdout), error: '' };
   } catch {
-    return [];
+    return { tasks: [], error: 'Unable to parse issue list output' };
   }
 }
 
@@ -119,7 +134,7 @@ const branch = run('git', ['branch', '--show-current'], { quiet: true }).stdout 
 const remote = run('git', ['remote', 'get-url', 'origin'], { quiet: true }).stdout || 'no-origin';
 const beforeHead = run('git', ['rev-parse', '--short', 'HEAD'], { quiet: true }).stdout || 'unknown';
 const statusBefore = run('git', ['status', '--porcelain'], { quiet: true }).stdout;
-const fetchResult = remote === 'no-origin' ? { ok: false, stderr: 'no origin remote' } : run('git', ['fetch', '--quiet', 'origin', branch], { quiet: true });
+const fetchResult = remote === 'no-origin' ? { ok: false, stderr: 'no origin remote' } : run('git', ['fetch', '--quiet', 'origin'], { quiet: true });
 
 let pullResult = null;
 if (shouldPull) {
@@ -131,8 +146,10 @@ const afterHead = run('git', ['rev-parse', '--short', 'HEAD'], { quiet: true }).
 const upstream = run('git', ['rev-parse', '--short', `origin/${branch}`], { quiet: true }).stdout || '';
 const statusAfter = run('git', ['status', '--short'], { quiet: true }).stdout;
 const loopState = parseLoopState(read('.ai-bridge/loop-state.md'));
-const latestRun = getLatestRun();
-const openTasks = getOpenAgentTasks();
+const repo = getRepo();
+const latestRun = getLatestRun(repo);
+const labelStatus = ensureAgentTaskLabel(repo);
+const openTasksResult = getOpenAgentTasks(repo, labelStatus);
 const report = {
   branch,
   remote,
@@ -146,8 +163,10 @@ const report = {
   missingProtocolFiles: missing,
   loopState,
   nextAction: nextAction(loopState),
+  agentTaskLabel: labelStatus,
   latestRun,
-  openAgentTasks: openTasks,
+  openAgentTasks: openTasksResult.tasks,
+  openAgentTasksError: openTasksResult.error,
   latestAgentStatus: latestAgentStatus(read('.ai-bridge/agent-status.md')),
 };
 
@@ -179,13 +198,16 @@ if (asJson) {
     console.log('');
     console.log(`latest_ci: ${latestRun.workflowName} ${latestRun.status}/${latestRun.conclusion || 'pending'} ${latestRun.url}`);
   }
-  if (openTasks.length > 0) {
+  console.log(`agent_task_label: ${report.agentTaskLabel.status}${report.agentTaskLabel.error ? ` (${report.agentTaskLabel.error})` : ''}`);
+  if (report.openAgentTasksError) console.log(`agent_task_error: ${report.openAgentTasksError}`);
+  if (report.openAgentTasks.length > 0) {
     console.log('');
     console.log('open agent tasks:');
-    for (const issue of openTasks) console.log(`  #${issue.number} ${issue.title} ${issue.url}`);
+    for (const issue of report.openAgentTasks) console.log(`  #${issue.number} ${issue.title} ${issue.url}`);
   }
   console.log('');
   console.log(report.latestAgentStatus);
 }
 
-if (missing.length > 0) process.exit(1);
+const githubTaskError = !['exists', 'created'].includes(report.agentTaskLabel.status) || Boolean(report.openAgentTasksError);
+if (missing.length > 0 || (process.env.CI && githubTaskError)) process.exit(1);

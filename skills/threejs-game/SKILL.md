@@ -26,9 +26,9 @@ Before work:
 
 ## Image and Asset Rule
 
-This local fork intentionally removes any hard dependency on Gemini or any other image generation provider.
+This local fork intentionally removes any hard dependency on Gemini. Codex may generate images when the task explicitly selects a supported non-hardcoded provider.
 
-Codex must not directly call an image-generation API as part of this local skill flow. When a 2D asset is needed, Codex creates an `AssetRequest` JSON file under:
+When a 2D asset is needed, create or update an `AssetRequest` JSON file under:
 
 ```text
 .ai-bridge/assets/pending/
@@ -40,15 +40,27 @@ The request must validate against:
 .ai-bridge/schemas/asset-request.schema.json
 ```
 
-Antigravity or another asset worker owns generation, editing, conversion, and manifest updates. Codex only validates and integrates completed assets.
+The request declares `provider`. Use `provider=auto` when any capable idle worker may claim it. Use `codex-native`, `openai-api`, or `procedural` only when Codex is explicitly the right worker. Use `antigravity-native` or `gemini-api` only when Antigravity is explicitly the right worker. Gemini must never be required for the game to build or for non-image tasks to complete.
+
+Workers advertise availability through heartbeat JSON files under:
+
+```text
+.ai-bridge/workers/heartbeats/
+```
+
+Heartbeats validate against:
+
+```text
+.ai-bridge/schemas/worker-heartbeat.schema.json
+```
 
 ## AssetRequest Minimum
 
 ```json
 {
   "id": "asset-ruler-select-background-v2",
-  "owner": "antigravity",
-  "provider": "antigravity",
+  "owner": "unassigned",
+  "provider": "auto",
   "state": "pending",
   "type": "background",
   "purpose": "Original text-free retro strategy map background for ruler selection",
@@ -68,6 +80,8 @@ Antigravity or another asset worker owns generation, editing, conversion, and ma
 }
 ```
 
+For `provider=auto`, pending requests stay `owner=unassigned`. A capable idle worker claims the request by moving it to `in_progress`, setting `owner`, `claimedBy`, `claimedAt`, `heartbeatId`, and `selectedProvider`, then keeping the heartbeat current until completion or failure.
+
 ## Queues
 
 - Tasks: `.ai-bridge/tasks/{pending,in_progress,completed,failed}/`
@@ -82,6 +96,7 @@ Run:
 ```bash
 npm run agent:loop
 npm run agent:check
+npm run queue:validate
 npm run assets:validate
 npm run build
 ```

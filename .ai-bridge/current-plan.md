@@ -1,25 +1,30 @@
 # Sango Agent Bridge Plan
 
-## 当前 S0 任务：自动开发基础设施
+## 当前 S0.1 任务：ORCHESTRATION-HARDENING
 
 Owner: Codex Game Development Agent
 
-目标：建立 agentic engineering / harness engineering 的基础设施，不开发新玩法。
+Task ID: S0.1-ORCHESTRATION-HARDENING
+
+目标：修正双生图 provider、任务发现、合同校验和 PR 审查门，不修改任何游戏玩法。
 
 范围：
 
-- 建立 `.ai-bridge/{tasks,assets,reports,reviews}/` 队列目录。
-- 用 `.ai-bridge/schemas/*.schema.json` 固化任务、AssetRequest、报告和审查请求合同。
-- 在 `skills/threejs-game/SKILL.md` 中 fork 项目本地 Three.js game skill。
-- 移除本地 skill 对 Gemini 生图的硬依赖：Codex 只创建 AssetRequest，Antigravity 或资产 worker 负责图片生成和 manifest 更新。
-- 增加 `npm run assets:validate`，检查文件存在、magic bytes、MIME、尺寸、sha256 和 manifest 一致性。
-- 编写 `docs/AUTOMATED_DEVELOPMENT.md` 作为自动 loop 操作说明。
+- `AssetRequest.owner` 支持 `unassigned`、`codex`、`antigravity`。
+- `AssetRequest.provider` 支持 `auto`、`codex-native`、`antigravity-native`、`openai-api`、`gemini-api`、`procedural`、`manual`。
+- 本地 skill 只禁止 Gemini 硬依赖，不禁止 Codex 在匹配 provider 时生图。
+- 增加 worker capability / heartbeat 合同。
+- 增加 `npm run queue:validate`，实际校验四类队列 JSON 与 worker heartbeat。
+- CI 执行 `npm run agent:loop -- --json`、`queue:validate`、`assets:validate`。
+- `agent:loop` 自动检查或初始化 `agent-task` 标签，标签不可用时显式报告。
+- WebP 暂时从支持格式移除，资产校验严格检查扩展名、MIME、magic bytes、尺寸和 sha256。
+- 后续 agent 使用 `agent/<task-id>-<owner>` 分支创建 PR，禁止直接推送 `main`。
 
 完成后：
 
-- Codex 运行 `npm run assets:validate`、`npm run agent:check`、`npm run build`。
+- Codex 运行 `npm run agent:loop -- --json`、`npm run agent:check`、`npm run queue:validate`、`npm run assets:validate`、`npm run build`、`npm test`。
 - Codex 更新 `.ai-bridge/agent-status.md`。
-- 提交并推送自动开发基础设施，等待 ChatGPT / user 审查。
+- 推送 `agent/S0.1-ORCHESTRATION-HARDENING-codex` 并创建 PR，等待 ChatGPT / user 审查。
 
 ## 当前协作模式
 
@@ -123,10 +128,12 @@ Owner: Antigravity Local Art/UI Agent
 Codex 合并或提交前至少运行：
 
 ```bash
-npm run agent:loop
+npm run agent:loop -- --json
 npm run agent:check
+npm run queue:validate
 npm run assets:validate
 npm run build
+npm test
 ```
 
 涉及数据、存档、玩法、UI 流程时继续运行：

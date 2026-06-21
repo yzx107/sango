@@ -88,7 +88,7 @@ function checkPackageScripts() {
   const pkg = readJson('package.json');
   if (!pkg) return;
   const scripts = pkg.scripts ?? {};
-  for (const script of ['build', 'test', 'verify:visual', 'inspect:canvas', 'assets:validate', 'validate:data', 'agent:check', 'agent:loop']) {
+  for (const script of ['build', 'test', 'verify:visual', 'inspect:canvas', 'assets:validate', 'queue:validate', 'validate:data', 'agent:check', 'agent:loop']) {
     if (!scripts[script]) failures.push(`package.json missing script: ${script}`);
   }
 }
@@ -161,6 +161,8 @@ function main() {
     '.ai-bridge/schemas/asset-request.schema.json',
     '.ai-bridge/schemas/agent-report.schema.json',
     '.ai-bridge/schemas/review-request.schema.json',
+    '.ai-bridge/schemas/worker-heartbeat.schema.json',
+    '.ai-bridge/workers/heartbeats/.gitkeep',
     'docs/AUTOMATED_DEVELOPMENT.md',
     'skills/threejs-game/SKILL.md',
     'public/assets/generated/manifest.json',
@@ -176,14 +178,15 @@ function main() {
       checkDirectory(`.ai-bridge/${queue}/${state}`);
     }
   }
+  checkDirectory('.ai-bridge/workers/heartbeats');
 
   checkRequiredText('PROJECT_BRIEF.md', ['霸王的大陆', '不复刻任何原作资产', 'Antigravity', 'Codex', 'ChatGPT']);
-  checkRequiredText('AGENTS.md', ['PROJECT_BRIEF.md', 'Antigravity', 'Codex Game Development Agent', 'AssetRequest']);
-  checkRequiredText('.ai-bridge/current-plan.md', ['AssetRequest', 'assets:validate', '完成后']);
-  checkRequiredText('.ai-bridge/loop-state.md', ['state:', 'current_owner:', 'needs_art']);
+  checkRequiredText('AGENTS.md', ['PROJECT_BRIEF.md', 'Antigravity', 'Codex Game Development Agent', 'AssetRequest', 'agent/']);
+  checkRequiredText('.ai-bridge/current-plan.md', ['S0.1-ORCHESTRATION-HARDENING', 'queue:validate', 'assets:validate']);
+  checkRequiredText('.ai-bridge/loop-state.md', ['state: needs_review', 'current_owner: ChatGPT Remote Reviewer', 'next_owner: ChatGPT Remote Reviewer']);
   checkRequiredText('.ai-bridge/file-locks.md', ['Current Locks', 'Locked']);
-  checkRequiredText('docs/AUTOMATED_DEVELOPMENT.md', ['AssetRequest', 'assets:validate', 'File Ownership Rules']);
-  checkRequiredText('skills/threejs-game/SKILL.md', ['removes any hard dependency on Gemini', 'AssetRequest', '.ai-bridge/assets/pending/']);
+  checkRequiredText('docs/AUTOMATED_DEVELOPMENT.md', ['AssetRequest', 'queue:validate', 'worker heartbeat', 'agent/']);
+  checkRequiredText('skills/threejs-game/SKILL.md', ['hard dependency on Gemini', 'Codex may generate', 'provider=auto', '.ai-bridge/assets/pending/']);
   checkPackageScripts();
   checkManifest();
 

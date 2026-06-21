@@ -208,3 +208,38 @@
   - `npm run build`: passed
 - Open issues: 未跑完整 Playwright 套件，因为本轮只提交自动开发基础设施且未改玩法/UI 运行代码。
 - Next owner: ChatGPT Remote Reviewer / user 审查自动化 diff；如需新图，Codex 创建 AssetRequest，Antigravity 执行。
+
+## Agent Update - 2026-06-21 23:17
+
+- Owner: Codex Game Development Agent
+- Goal: S0.1-ORCHESTRATION-HARDENING，修正双生图 provider、任务发现、合同校验和 PR 审查门；不修改游戏玩法。
+- Files changed:
+  - `.ai-bridge/schemas/asset-request.schema.json`
+  - `.ai-bridge/schemas/worker-heartbeat.schema.json`
+  - `.ai-bridge/workers/heartbeats/.gitkeep`
+  - `.ai-bridge/current-plan.md`
+  - `.ai-bridge/loop-state.md`
+  - `.ai-bridge/file-locks.md`
+  - `.ai-bridge/assets/schema.md`
+  - `.github/workflows/ci.yml`
+  - `.github/ISSUE_TEMPLATE/agent-task.yml`
+  - `.github/pull_request_template.md`
+  - `scripts/agent-loop.mjs`
+  - `scripts/agent-check.mjs`
+  - `scripts/assets-validate.mjs`
+  - `scripts/queue-validate.mjs`
+  - `skills/threejs-game/SKILL.md`
+  - `docs/AUTOMATED_DEVELOPMENT.md`
+  - `AGENTS.md`
+  - `PROJECT_BRIEF.md`
+  - `package.json`
+- Assets changed: 未修改任何图片文件；WebP 暂不支持，PNG/JPEG 校验改为严格扩展名、MIME、magic bytes、尺寸、sha256 一致。
+- Validation:
+  - `npm run agent:loop -- --json`: passed；自动创建或确认 `agent-task` 标签。
+  - `npm run agent:check`: passed
+  - `npm run queue:validate`: passed
+  - `npm run assets:validate`: passed
+  - `npm run build`: passed
+  - `npm test`: passed
+- Open issues: 等待 PR 上 GitHub Actions 结果与 ChatGPT Remote Reviewer 审查。
+- Next owner: ChatGPT Remote Reviewer。

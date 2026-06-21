@@ -6,11 +6,11 @@ This file is the shared state machine for low-interruption agent collaboration.
 
 - state: needs_review
 - current_owner: ChatGPT Remote Reviewer
-- next_owner: decided by review outcome
+- next_owner: ChatGPT Remote Reviewer
 - remote_reviewer: ChatGPT Remote Reviewer
 - source_of_truth: GitHub main plus local `git status`
-- last_validated_local_state: S0 orchestration bootstrap infrastructure
-- updated_at: 2026-06-21 22:50 Asia/Shanghai
+- last_validated_local_state: S0.1 orchestration hardening branch
+- updated_at: 2026-06-21 23:17 Asia/Shanghai
 
 ## State Meanings
 
@@ -24,26 +24,29 @@ This file is the shared state machine for low-interruption agent collaboration.
 
 ## Current Sprint
 
-Goal: Review S0 orchestration bootstrap without disturbing the working game loop.
+Goal: Review S0.1 orchestration hardening without disturbing the working game loop.
 
 Current review task:
 
-1. ChatGPT or the user reviews the automatic development infrastructure diff on GitHub.
-2. If the queues, schemas, local skill fork, ownership rules, and `assets:validate` are acceptable, set `state: done`.
-3. If asset worker behavior needs changes, set `state: needs_art` and assign Antigravity.
+1. ChatGPT or the user reviews the S0.1 PR.
+2. If provider routing, queue validation, worker heartbeat, strict asset validation, and PR gate are acceptable, approve the PR.
+3. If asset worker behavior needs changes after approval, set `state: needs_art` and assign Antigravity.
 4. If scripts or CI need changes, set `state: needs_dev` and assign Codex.
 
 Latest Codex validation:
 
 ```bash
+npm run agent:loop -- --json
 npm run agent:check
+npm run queue:validate
 npm run assets:validate
 npm run build
+npm test
 ```
 
-Result: passed locally on 2026-06-21 for S0 infrastructure scope.
+Result: passed locally on 2026-06-21 for S0.1 branch.
 
-Scope note: no gameplay source files were changed in this S0 pass.
+Scope note: no gameplay source files were changed in this S0.1 pass.
 
 ## Automation Contract
 

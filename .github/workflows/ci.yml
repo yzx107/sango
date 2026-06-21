@@ -3,10 +3,16 @@ name: Sango Agent Loop CI
 on:
   push:
     branches:
-      - main
+      - "agent/**"
   pull_request:
     branches:
       - main
+
+permissions:
+  actions: read
+  contents: read
+  issues: write
+  pull-requests: read
 
 jobs:
   verify:
@@ -27,11 +33,29 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: PR branch policy
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "${{ github.head_ref }}" in
+            agent/*) ;;
+            *) echo "Agent PR branches must use agent/<task-id>-<owner>."; exit 1 ;;
+          esac
+
+      - name: Agent loop self-check
+        run: npm run agent:loop -- --json
+        env:
+          GH_TOKEN: ${{ github.token }}
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium webkit
 
       - name: Agent protocol check
         run: npm run agent:check
+
+      - name: Queue contract validation
+        run: npm run queue:validate
 
       - name: Asset manifest validation
         run: npm run assets:validate

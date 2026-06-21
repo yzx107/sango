@@ -51,3 +51,24 @@
 - Validation: 待运行 `npm run build`。
 - Open issues: Antigravity 若继续生成新一批美术资产，需要保持 `public/assets/generated/manifest.json` 与图片路径同步。
 - Next owner: Antigravity 可继续生成资产；ChatGPT 可通过 GitHub 远程读取 `AGENTS.md` 和 `.ai-bridge/current-plan.md` 审查流程。
+
+## Agent Handoff - 2026-06-21 21:08
+
+- From: Codex Game Development Agent
+- To: Antigravity Local Art/UI Agent
+- Goal: 接管 Sango Phase 1 美术资产定稿与 UI 视觉统一。
+- Task source: `.ai-bridge/current-plan.md` 的 `Antigravity 当前任务`。
+- Files allowed:
+  - `public/assets/generated/`
+  - `public/assets/generated/manifest.json`
+  - `src/styles.css`
+  - 必要时少量 `src/ui/`
+- Files locked:
+  - `src/game/`
+  - `src/data/`
+  - `src/render/`
+- Notes:
+  - 当前 Gemini 头像已在 `public/assets/generated/rulers/`。
+  - 当前 `.png` 文件内部被检测为 JPEG 编码，建议转成真正 PNG 或同步改扩展名。
+  - 当前背景图含英文菜单感，建议换成无可读英文的原创复古战略地图氛围图。
+- Next owner after completion: Codex 负责构建、截图、canvas 检查和测试。

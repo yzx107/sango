@@ -30,10 +30,63 @@
 
 ## 本轮约定
 
-1. Antigravity 如果继续生成新一批美术资产，只落盘到 `public/assets/generated/`，并更新 `manifest.json`。
+1. Antigravity 当前接管美术/UI 定稿任务，只落盘到 `public/assets/generated/`，并更新 `manifest.json`。
 2. Codex 在 Antigravity 生成期间不覆盖这些图片，只做检查、格式校验、页面接入和测试。
 3. ChatGPT 远程审查时优先读取 `AGENTS.md` 和本文件，再审查 diff。
 4. 任一 agent 完成后都要更新 `.ai-bridge/agent-status.md`，不要只在聊天里口头说明。
+
+## Antigravity 当前任务
+
+Owner: Antigravity Local Art/UI Agent
+
+目标：完成 Sango Phase 1 美术资产定稿与 UI 视觉统一。不要修改核心游戏逻辑。
+
+请先读取：
+
+1. `AGENTS.md`
+2. `.ai-bridge/current-plan.md`
+3. `public/assets/generated/manifest.json`
+4. `README.md`
+
+必做：
+
+1. 检查 7 张君主头像：
+   - 路径：`public/assets/generated/rulers/*.png`
+   - 检查刘备、曹操、孙坚、袁绍、董卓、刘焉、马腾是否风格统一、构图统一、无乱码文字、无明显生成缺陷。
+   - 特别检查袁绍、马腾头像内置文字；如果文字不合适，请裁掉或重新生成。
+2. 修正图片格式：
+   - 当前部分 `.png` 文件实际内部为 JPEG 编码。
+   - 推荐保持现有文件路径不变，转成真正 PNG。
+   - 如果改扩展名为 `.jpg`，必须同步代码引用和 manifest。
+3. 更新 `public/assets/generated/manifest.json`：
+   - 记录每张图用途、尺寸、真实格式、生成工具、提示摘要、生成批次。
+   - 不要把 Gemini 正式图写成 fallback 或占位图。
+4. 优化开局背景：
+   - 当前 `public/assets/generated/backgrounds/ruler-select.png` 像完整英文菜单截图。
+   - 请替换为原创复古战略地图氛围背景，避免可读英文、避免完整菜单 UI、避免商业游戏截图感。
+5. UI 视觉统一：
+   - 可修改 `src/styles.css`。
+   - 重点：君主选择页、顶部条、右侧城池面板、弹窗边框。
+   - 保持文字可读，不加重 CRT 模糊滤镜。
+   - 手机端不能横向溢出。
+
+禁止：
+
+- 不要修改 `src/game/`
+- 不要修改 `src/data/`
+- 不要修改战斗、AI、命令书、存档逻辑
+- 不要提交 `dist/`、`artifacts/`、`test-results/`
+- 不要使用商业游戏截图、ROM 素材、原 Logo、原文案或精确 UI 布局
+
+完成后：
+
+1. 更新 `.ai-bridge/agent-status.md`，写清：
+   - 生成/替换了哪些资产
+   - 哪些文件被修改
+   - manifest 是否同步
+   - 是否还有需要 Codex 接入的问题
+   - 建议 Codex 跑哪些验证命令
+2. 停止并交给 Codex 做构建、截图和测试。
 
 ## 必跑验收
 

@@ -1,0 +1,36 @@
+{
+  "id": "asset-auto-provider-smoke-icon",
+  "owner": "antigravity",
+  "provider": "auto",
+  "claimedBy": "worker-antigravity-1",
+  "claimedAt": "2026-06-21T15:30:00.000Z",
+  "heartbeatId": "worker-antigravity-1",
+  "selectedProvider": "antigravity-native",
+  "state": "completed",
+  "type": "icon",
+  "purpose": "Small original pixel-art bronze seal icon for verifying the provider=auto claim and heartbeat workflow.",
+  "prompt": "Original 8-bit inspired bronze seal icon for a Three Kingdoms strategy UI, square composition, hard-edge limited palette, no readable text, no logo, no copied commercial game layout.",
+  "targetPath": "public/assets/generated/ui/auto-provider-smoke.png",
+  "expected": {
+    "mime": "image/png",
+    "width": 256,
+    "height": 256,
+    "transparent": true
+  },
+  "constraints": [
+    "No readable text",
+    "No commercial game screenshot imitation",
+    "No logo",
+    "Use an original limited-color pixel-art style",
+    "Keep the asset small and suitable for UI smoke validation"
+  ],
+  "createdAt": "2026-06-21T15:27:39.000Z",
+  "result": {
+    "path": "public/assets/generated/ui/auto-provider-smoke.png",
+    "sha256": "af66301aef1a8ded69ee4d24d1546b33b1ae4a4de3e1973206fe8ee917a899f3",
+    "mime": "image/png",
+    "width": 256,
+    "height": 256
+  },
+  "notes": "Created after PR #1 approval and merge. Antigravity should claim with a heartbeat that advertises antigravity-native for icon assets."
+}

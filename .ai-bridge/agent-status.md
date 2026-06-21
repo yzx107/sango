@@ -243,3 +243,41 @@
   - `npm test`: passed
 - Open issues: 等待 PR 上 GitHub Actions 结果与 ChatGPT Remote Reviewer 审查。
 - Next owner: ChatGPT Remote Reviewer。
+
+## Agent Update - 2026-06-21 23:27
+
+- Owner: Codex Game Development Agent
+- Goal: 合并 PR #1，并为 Antigravity 创建一个真实 `provider=auto` AssetRequest。
+- Files changed:
+  - `.ai-bridge/assets/pending/asset-auto-provider-smoke-icon.json`
+  - `.ai-bridge/loop-state.md`
+  - `.ai-bridge/agent-status.md`
+- Assets changed: 未生成或修改图片；只创建待领取资产请求。
+- Validation:
+  - PR #1: merged into `main`
+  - `npm run queue:validate`: pending after local request creation
+  - `npm run assets:validate`: pending after local request creation
+- Open issues:
+  - Antigravity 需要写入 worker heartbeat，领取该请求，生成 `public/assets/generated/ui/auto-provider-smoke.png`，更新 manifest，并完成验证。
+- Next owner: Antigravity Local Art/UI Agent。
+
+## Agent Update - 2026-06-21 23:36
+
+- Owner: Codex Game Development Agent
+- Goal: 验证 Antigravity 完成的 `provider=auto` AssetRequest、worker heartbeat、manifest 和视觉 smoke。
+- Files changed:
+  - `.ai-bridge/assets/completed/asset-auto-provider-smoke-icon.json`
+  - `.ai-bridge/workers/heartbeats/antigravity-heartbeat.json`
+  - `.ai-bridge/loop-state.md`
+  - `.ai-bridge/agent-status.md`
+- Assets changed:
+  - Antigravity 生成 `public/assets/generated/ui/auto-provider-smoke.png`
+  - Antigravity 更新 `public/assets/generated/manifest.json`
+- Validation:
+  - `npm run queue:validate`: initially failed on heartbeat/request field names; Codex normalized metadata to S0.1 schema, then passed.
+  - `npm run assets:validate`: passed
+  - `npm run build`: passed
+  - `npm run verify:visual`: passed
+- Open issues:
+  - 非阻塞：`auto-provider-smoke.png` 是 256x256 PNG 且 sha256 匹配，但实际 PNG 为 RGB、无 alpha；原请求写了 `transparent: true`。
+- Next owner: ChatGPT Remote Reviewer。

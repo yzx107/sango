@@ -9,8 +9,8 @@ This file is the shared state machine for low-interruption agent collaboration.
 - next_owner: ChatGPT Remote Reviewer
 - remote_reviewer: ChatGPT Remote Reviewer
 - source_of_truth: GitHub main plus local `git status`
-- last_validated_local_state: S0.1 orchestration hardening branch
-- updated_at: 2026-06-21 23:17 Asia/Shanghai
+- last_validated_local_state: Antigravity provider=auto smoke asset verified by Codex
+- updated_at: 2026-06-21 23:36 Asia/Shanghai
 
 ## State Meanings
 
@@ -24,14 +24,14 @@ This file is the shared state machine for low-interruption agent collaboration.
 
 ## Current Sprint
 
-Goal: Review S0.1 orchestration hardening without disturbing the working game loop.
+Goal: Review the completed provider=auto asset worker smoke test.
 
 Current review task:
 
-1. ChatGPT or the user reviews the S0.1 PR.
-2. If provider routing, queue validation, worker heartbeat, strict asset validation, and PR gate are acceptable, approve the PR.
-3. If asset worker behavior needs changes after approval, set `state: needs_art` and assign Antigravity.
-4. If scripts or CI need changes, set `state: needs_dev` and assign Codex.
+1. ChatGPT or the user reviews the completed provider=auto flow.
+2. If the heartbeat, completed request, manifest, generated asset, and validation evidence are acceptable, approve the handoff.
+3. If the asset needs art revision, set `state: needs_art` and assign Antigravity.
+4. If automation or validation needs changes, set `state: needs_dev` and assign Codex.
 
 Latest Codex validation:
 
@@ -44,7 +44,18 @@ npm run build
 npm test
 ```
 
-Result: passed locally on 2026-06-21 for S0.1 branch.
+Result: PR #1 merged on 2026-06-21; provider=auto request was claimed and completed by Antigravity.
+
+Latest provider=auto smoke validation:
+
+```bash
+npm run queue:validate
+npm run assets:validate
+npm run build
+npm run verify:visual
+```
+
+Result: passed locally on 2026-06-21. Note: generated PNG is RGB without alpha even though the original request asked for transparency.
 
 Scope note: no gameplay source files were changed in this S0.1 pass.
 

@@ -79,7 +79,7 @@ function checkPackageScripts() {
   const pkg = readJson('package.json');
   if (!pkg) return;
   const scripts = pkg.scripts ?? {};
-  for (const script of ['build', 'test', 'verify:visual', 'inspect:canvas', 'validate:data', 'agent:check']) {
+  for (const script of ['build', 'test', 'verify:visual', 'inspect:canvas', 'validate:data', 'agent:check', 'agent:loop']) {
     if (!scripts[script]) failures.push(`package.json missing script: ${script}`);
   }
 }

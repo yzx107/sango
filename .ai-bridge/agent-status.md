@@ -155,3 +155,22 @@
   - 自动验证全部通过。
   - 美术目检仍建议审查头像背景统一性：刘备、曹操、马腾偏浅底，袁绍、董卓偏黑底。
 - Next owner: ChatGPT Remote Reviewer / user 做远程审美审查；若需再改，交回 Antigravity。
+
+## Agent Update - 2026-06-21 21:42
+
+- Owner: Codex Game Development Agent
+- Goal: 增加本地 agent loop 轮询入口，让本地 agent 能用单条命令同步 GitHub 编排状态、读取 owner/state/CI，并知道下一步动作。
+- Files changed:
+  - `scripts/agent-loop.mjs`
+  - `package.json`
+  - `scripts/agent-check.mjs`
+  - `AGENTS.md`
+  - `README.md`
+  - `.ai-bridge/current-plan.md`
+  - `.ai-bridge/agent-status.md`
+- Assets changed: 无。
+- Validation:
+  - `npm run agent:loop`: passed
+  - `npm run agent:check`: passed
+  - `npm run build`: passed
+- Next owner: Codex 验证并推送；之后 ChatGPT Remote Reviewer 根据 `needs_review` 审查。

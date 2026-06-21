@@ -98,6 +98,7 @@ Owner: Antigravity Local Art/UI Agent
 Codex 合并或提交前至少运行：
 
 ```bash
+npm run agent:loop
 npm run agent:check
 npm run build
 ```

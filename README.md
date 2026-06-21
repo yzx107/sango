@@ -21,6 +21,7 @@ npm run preview
 ## 验证
 
 ```bash
+npm run agent:loop
 npm run agent:check
 npm run validate:data
 npm test

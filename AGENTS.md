@@ -88,6 +88,7 @@
 
 ## 自动 Loop 规则
 
+- 本地 agent 开始前先运行 `npm run agent:loop`，必要时运行 `npm run agent:loop -- --pull` 快进同步远端状态。
 - GitHub Issue 使用 `.github/ISSUE_TEMPLATE/agent-task.yml` 创建带 owner、状态、允许文件和验收命令的任务。
 - PR 使用 `.github/pull_request_template.md` 记录 owner、loop 状态、验证结果和下一 owner。
 - GitHub Actions 会运行 `npm run agent:check`、构建、数据验证、Playwright、视觉检查和 canvas 检查。

@@ -12,7 +12,8 @@
     "inspect:canvas": "node scripts/inspect-threejs-canvas.mjs",
     "assets:fallback": "node scripts/generate-retro-placeholders.mjs",
     "validate:data": "playwright test tests/data.spec.ts",
-    "agent:check": "node scripts/agent-check.mjs"
+    "agent:check": "node scripts/agent-check.mjs",
+    "agent:loop": "node scripts/agent-loop.mjs"
   },
   "dependencies": {
     "three": "^0.184.0"

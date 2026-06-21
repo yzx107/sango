@@ -11,7 +11,8 @@
     "verify:visual": "playwright test tests/visual.spec.ts",
     "inspect:canvas": "node scripts/inspect-threejs-canvas.mjs",
     "assets:fallback": "node scripts/generate-retro-placeholders.mjs",
-    "validate:data": "playwright test tests/data.spec.ts"
+    "validate:data": "playwright test tests/data.spec.ts",
+    "agent:check": "node scripts/agent-check.mjs"
   },
   "dependencies": {
     "three": "^0.184.0"

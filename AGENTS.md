@@ -54,6 +54,8 @@
 
 - `.ai-bridge/current-plan.md`：当前协作计划、任务队列、锁定文件、交接规则。
 - `.ai-bridge/agent-status.md`：每个 agent 完成工作后写入的状态报告。
+- `.ai-bridge/loop-state.md`：自动 loop 的状态机，记录当前 owner、下一 owner 和状态。
+- `.ai-bridge/file-locks.md`：各 agent 当前可改和不可改的文件范围。
 - `public/assets/generated/manifest.json`：生成资产清单，是 UI 代码引用资产的事实来源。
 
 ## 工作流
@@ -68,6 +70,7 @@
    - 验证命令和结果
    - 未完成项
 5. Codex 负责最终构建和测试：
+   - `npm run agent:check`
    - `npm run build`
    - `npm run validate:data`
    - `npm test`
@@ -79,9 +82,17 @@
 
 - 不在同一轮混入无关重构。
 - 不提交 `dist/`、`artifacts/`、`test-results/`、`node_modules/`。
-- 提交前运行至少 `npm run build`。
+- 提交前运行至少 `npm run agent:check` 和 `npm run build`。
 - 若当前工作树包含其他 agent 的未提交文件，先读状态文件判断归属，不要直接覆盖。
 - commit message 使用简短动词短语，例如 `Add agent collaboration protocol`。
+
+## 自动 Loop 规则
+
+- GitHub Issue 使用 `.github/ISSUE_TEMPLATE/agent-task.yml` 创建带 owner、状态、允许文件和验收命令的任务。
+- PR 使用 `.github/pull_request_template.md` 记录 owner、loop 状态、验证结果和下一 owner。
+- GitHub Actions 会运行 `npm run agent:check`、构建、数据验证、Playwright、视觉检查和 canvas 检查。
+- CI 失败时，当前 owner 继续修；CI 通过后进入 `needs_review` 或交给下一 owner。
+- `agent:check` 对缺失协议文件和缺失资产引用会失败；对已知美术质量问题先警告，避免阻塞当前自动化。
 
 ## 资产规则
 

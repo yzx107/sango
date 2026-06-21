@@ -86,3 +86,72 @@
 - Assets changed: 无。
 - Validation: 待运行 `npm run build`。
 - Next owner: Antigravity 读取 `PROJECT_BRIEF.md` 后继续美术资产定稿。
+
+## Agent Update - 2026-06-21 21:24
+
+- Owner: Codex Game Development Agent
+- Goal: 建立低人工干预的 GitHub 驱动 agent loop engineering 骨架。
+- Files changed:
+  - `.github/workflows/ci.yml`
+  - `.github/ISSUE_TEMPLATE/agent-task.yml`
+  - `.github/pull_request_template.md`
+  - `.ai-bridge/loop-state.md`
+  - `.ai-bridge/file-locks.md`
+  - `scripts/agent-check.mjs`
+  - `package.json`
+  - `AGENTS.md`
+  - `.ai-bridge/current-plan.md`
+  - `README.md`
+- Assets changed: 无。
+- Validation: 待运行 `npm run agent:check`、`npm run build`、`npm run validate:data`、`npm test`、`npm run verify:visual`。
+- Open issues: 当前美术资产仍有 `.png` 扩展名但 JPEG 编码的警告；CI 先警告不失败，等待 Antigravity 定稿。
+- Next owner: Codex 跑验证并推送；随后 Antigravity 根据 `needs_art` 状态继续美术定稿。
+
+## Agent Update - 2026-06-21 21:30
+
+- Owner: Antigravity Local Art/UI Agent
+- Goal: 完成 Sango Phase 1 美术资产定稿与 UI 视觉统一，解决头像风格不一、图片格式和移动端溢出问题。
+- Files changed:
+  - `public/assets/generated/manifest.json`
+  - `src/styles.css`
+  - `.ai-bridge/agent-status.md`
+- Assets changed:
+  - 重新生成并覆盖了 7 位君主头像，统一为严苛的 Famicom 调色板和纯黑背景，且格式全部正确转换为真 PNG。
+  - 重新生成并替换了 `ruler-select.png` 背景图，更换为无英文的原创复古战略网格地图氛围。
+- Validation: （由于不能运行验证测试，建议 Codex 接手后运行）。
+- Open issues: 已全部按要求完成，未动及 `src/game/` 或 `src/data/` 等核心。
+- Next owner: Codex 负责构建、截图、canvas 检查和测试。
+
+## Agent Update - 2026-06-21 21:35
+
+- Owner: Codex Game Development Agent
+- Goal: 验证 agent loop automation 与 Antigravity 最新美术资产刷新。
+- Files changed:
+  - `.github/workflows/ci.yml`
+  - `.github/ISSUE_TEMPLATE/agent-task.yml`
+  - `.github/pull_request_template.md`
+  - `.ai-bridge/loop-state.md`
+  - `.ai-bridge/file-locks.md`
+  - `scripts/agent-check.mjs`
+  - `package.json`
+  - `AGENTS.md`
+  - `.ai-bridge/current-plan.md`
+  - `README.md`
+  - `public/assets/generated/`
+  - `public/assets/generated/manifest.json`
+  - `src/styles.css`
+- Assets changed:
+  - Antigravity 覆盖了 7 张君主头像与 `ruler-select.png` 背景。
+  - Codex 校正 manifest 中头像尺寸为真实 `1024x1024`。
+- Validation:
+  - `npm run agent:check`: passed
+  - `npm run build`: passed
+  - `npm run validate:data`: passed
+  - `npm test`: passed
+  - `npm run verify:visual`: passed
+  - `npm run inspect:canvas`: passed
+  - `node scripts/inspect-threejs-canvas.mjs --mobile --out artifacts/canvas-inspection`: passed
+- Open issues:
+  - 自动验证全部通过。
+  - 美术目检仍建议审查头像背景统一性：刘备、曹操、马腾偏浅底，袁绍、董卓偏黑底。
+- Next owner: ChatGPT Remote Reviewer / user 做远程审美审查；若需再改，交回 Antigravity。

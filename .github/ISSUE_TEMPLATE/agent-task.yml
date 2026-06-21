@@ -1,0 +1,81 @@
+name: Agent Task
+description: Create a scoped Sango task for ChatGPT, Antigravity, or Codex.
+title: "[agent] "
+labels:
+  - agent-task
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before starting, read `PROJECT_BRIEF.md`, `AGENTS.md`, `.ai-bridge/current-plan.md`, and `.ai-bridge/loop-state.md`.
+  - type: dropdown
+    id: owner
+    attributes:
+      label: Owner
+      description: Which agent should own this task?
+      options:
+        - Codex Game Development Agent
+        - Antigravity Local Art/UI Agent
+        - ChatGPT Remote Reviewer
+    validations:
+      required: true
+  - type: dropdown
+    id: loop_state
+    attributes:
+      label: Loop State
+      options:
+        - todo
+        - in_progress
+        - needs_art
+        - needs_dev
+        - needs_review
+        - blocked
+        - done
+    validations:
+      required: true
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: State the user-visible outcome, not just the file to edit.
+      placeholder: "Example: Make the ruler select background original, text-free, and consistent with the retro Sango art direction."
+    validations:
+      required: true
+  - type: textarea
+    id: allowed_files
+    attributes:
+      label: Allowed Files
+      description: List the paths this task may modify.
+      placeholder: |
+        public/assets/generated/
+        public/assets/generated/manifest.json
+        src/styles.css
+    validations:
+      required: true
+  - type: textarea
+    id: locked_files
+    attributes:
+      label: Locked Files
+      description: List paths that must not be changed in this task.
+      placeholder: |
+        src/game/
+        src/data/
+        src/render/
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Checks
+      description: Commands or visual checks required before handoff.
+      value: |
+        - npm run agent:check
+        - npm run build
+    validations:
+      required: true
+  - type: textarea
+    id: handoff
+    attributes:
+      label: Handoff Notes
+      description: What should the next agent know?
+      placeholder: "Update `.ai-bridge/agent-status.md` and set the next owner in `.ai-bridge/loop-state.md`."

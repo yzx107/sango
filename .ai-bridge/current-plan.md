@@ -13,6 +13,8 @@
 - 项目介绍：`PROJECT_BRIEF.md`
 - 协作入口：`AGENTS.md`
 - 状态报告：`.ai-bridge/agent-status.md`
+- Loop 状态：`.ai-bridge/loop-state.md`
+- 文件锁：`.ai-bridge/file-locks.md`
 - 资产清单：`public/assets/generated/manifest.json`
 
 ## 文件归属
@@ -31,7 +33,8 @@
 
 ## 本轮约定
 
-1. Antigravity 当前接管美术/UI 定稿任务，只落盘到 `public/assets/generated/`，并更新 `manifest.json`。
+0. 当前自动 loop 状态以 `.ai-bridge/loop-state.md` 为准；如果状态是 `needs_review`，ChatGPT 或用户先审查，再决定是否回到 Antigravity。
+1. Antigravity 接管美术/UI 定稿任务时，只落盘到 `public/assets/generated/`，并更新 `manifest.json`。
 2. Codex 在 Antigravity 生成期间不覆盖这些图片，只做检查、格式校验、页面接入和测试。
 3. ChatGPT 远程审查时优先读取 `AGENTS.md` 和本文件，再审查 diff。
 4. 任一 agent 完成后都要更新 `.ai-bridge/agent-status.md`，不要只在聊天里口头说明。
@@ -95,6 +98,7 @@ Owner: Antigravity Local Art/UI Agent
 Codex 合并或提交前至少运行：
 
 ```bash
+npm run agent:check
 npm run build
 ```
 
@@ -128,3 +132,11 @@ node scripts/inspect-threejs-canvas.mjs --mobile --out artifacts/canvas-inspecti
 - Open issues:
 - Next owner:
 ```
+
+同时更新 `.ai-bridge/loop-state.md`：
+
+- 当前 owner 继续工作：保持 `state: in_progress`
+- 需要美术：设置 `state: needs_art`
+- 需要开发：设置 `state: needs_dev`
+- 需要远程审查：设置 `state: needs_review`
+- 完成：设置 `state: done`

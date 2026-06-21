@@ -42,7 +42,7 @@
   - `threejs-gameplay-systems`
   - `threejs-game-ui-designer`
   - `threejs-qa-release`
-- 需要新增或替换图片时，Codex 不直接调用生图服务；必须创建 `AssetRequest` 到 `.ai-bridge/assets/pending/`，由 Antigravity 或其他资产 worker 处理。
+- 需要新增或替换图片时，必须创建 `AssetRequest` 到 `.ai-bridge/assets/pending/`。Codex 可以在明确 provider 为 `codex-native`、`openai-api` 或 `procedural` 时处理图片；Antigravity 可以在 `antigravity-native`、`gemini-api` 或 `manual` 时处理图片；`provider=auto` 由具备能力且空闲的 worker 领取。
 - 优先修改：
   - `src/game/`
   - `src/render/`
@@ -60,6 +60,7 @@
 - `.ai-bridge/file-locks.md`：各 agent 当前可改和不可改的文件范围。
 - `.ai-bridge/schemas/`：任务、资产请求、报告和审查请求的 JSON Schema。
 - `.ai-bridge/{tasks,assets,reports,reviews}/`：自动化队列目录。
+- `.ai-bridge/workers/heartbeats/`：worker 能力和心跳声明目录。
 - `public/assets/generated/manifest.json`：生成资产清单，是 UI 代码引用资产的事实来源。
 
 ## 工作流
@@ -74,20 +75,24 @@
    - 验证命令和结果
    - 未完成项
 5. Codex 负责最终构建和测试：
+   - `npm run agent:loop -- --json`
    - `npm run agent:check`
+   - `npm run queue:validate`
    - `npm run assets:validate`
    - `npm run build`
    - `npm run validate:data`
    - `npm test`
    - `npm run verify:visual`
    - 需要浏览器验收时运行 `npm run inspect:canvas`
-6. 推送到 GitHub 后，ChatGPT 通过远程仓库审查最新状态。
+6. 推送 `agent/<task-id>-<owner>` 分支并创建 PR 后，ChatGPT 通过远程仓库审查最新状态。
 
 ## Git 规则
 
 - 不在同一轮混入无关重构。
 - 不提交 `dist/`、`artifacts/`、`test-results/`、`node_modules/`。
 - 提交前运行至少 `npm run agent:check` 和 `npm run build`。
+- 后续 agent 开发必须使用 `agent/<task-id>-<owner>` 分支并创建 PR。
+- 禁止 agent 直接推送 `main`；`main` 只能通过远程审查后的 PR 合并更新。
 - 若当前工作树包含其他 agent 的未提交文件，先读状态文件判断归属，不要直接覆盖。
 - commit message 使用简短动词短语，例如 `Add agent collaboration protocol`。
 
@@ -95,16 +100,22 @@
 
 - 本地 agent 开始前先运行 `npm run agent:loop`，必要时运行 `npm run agent:loop -- --pull` 快进同步远端状态。
 - GitHub Issue 使用 `.github/ISSUE_TEMPLATE/agent-task.yml` 创建带 owner、状态、允许文件和验收命令的任务。
+- `npm run agent:loop -- --json` 会检查或初始化 GitHub `agent-task` 标签；标签缺失或无法查询时必须显式报告，不得静默返回空任务。
 - PR 使用 `.github/pull_request_template.md` 记录 owner、loop 状态、验证结果和下一 owner。
-- GitHub Actions 会运行 `npm run agent:check`、构建、数据验证、Playwright、视觉检查和 canvas 检查。
+- GitHub Actions 会运行 `npm run agent:loop -- --json`、`npm run agent:check`、`npm run queue:validate`、`npm run assets:validate`、构建、数据验证、Playwright、视觉检查和 canvas 检查。
 - CI 失败时，当前 owner 继续修；CI 通过后进入 `needs_review` 或交给下一 owner。
 - `agent:check` 对缺失协议文件和缺失资产引用会失败；对已知美术质量问题先警告，避免阻塞当前自动化。
 
 ## 资产规则
 
 - 所有新增图片需求都先写成 `AssetRequest` JSON，放入 `.ai-bridge/assets/pending/`。
+- `AssetRequest.owner` 只能是 `unassigned`、`codex` 或 `antigravity`。
+- `AssetRequest.provider` 只能是 `auto`、`codex-native`、`antigravity-native`、`openai-api`、`gemini-api`、`procedural` 或 `manual`。
+- `provider=auto` 且状态为 `pending` 时，`owner` 必须是 `unassigned`；worker 领取后必须写入 `claimedBy`、`heartbeatId` 和 `selectedProvider`。
+- worker 能力和心跳写入 `.ai-bridge/workers/heartbeats/*.json`，并通过 `worker-heartbeat.schema.json` 校验。
 - 完成的资产必须写入 `public/assets/generated/manifest.json`，并包含 `file`、`purpose`、`size`、`format`、`mime`、`sha256` 和提示摘要。
 - Codex 使用 `npm run assets:validate` 验证文件存在、magic bytes、MIME、尺寸、sha256 和 manifest 一致性。
+- 当前未支持 WebP；如需 WebP，必须先实现尺寸解析并更新校验脚本。
 
 - 君主头像稳定路径：
   - `public/assets/generated/rulers/liubei.png`

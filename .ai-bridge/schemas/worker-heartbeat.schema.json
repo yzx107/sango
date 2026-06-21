@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/yzx107/sango/.ai-bridge/schemas/worker-heartbeat.schema.json",
+  "title": "Sango Worker Heartbeat",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "agent", "state", "providers", "assetTypes", "lastSeenAt"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^worker-[a-z0-9][a-z0-9-]*$"
+    },
+    "agent": {
+      "enum": ["codex", "antigravity"]
+    },
+    "state": {
+      "enum": ["idle", "busy", "offline", "blocked"]
+    },
+    "providers": {
+      "type": "array",
+      "items": {
+        "enum": ["codex-native", "antigravity-native", "openai-api", "gemini-api", "procedural", "manual"]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "assetTypes": {
+      "type": "array",
+      "items": {
+        "enum": ["portrait", "background", "ui-panel", "icon", "texture", "concept", "other"]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "currentTaskId": {
+      "type": "string",
+      "pattern": "^task-[a-z0-9][a-z0-9-]*$"
+    },
+    "currentAssetRequestId": {
+      "type": "string",
+      "pattern": "^asset-[a-z0-9][a-z0-9-]*$"
+    },
+    "lastSeenAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "leaseUntil": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}

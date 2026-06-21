@@ -160,7 +160,7 @@ Codex 是本地 Three.js 游戏开发 agent。
 - `threejs-game-ui-designer`
 - `threejs-qa-release`
 
-新增或替换图片时，Codex 不直接调用生图服务；先创建 `.ai-bridge/assets/pending/*.json` 的 `AssetRequest`，由 Antigravity 或资产 worker 生成、转换并更新 manifest。
+新增或替换图片时，先创建 `.ai-bridge/assets/pending/*.json` 的 `AssetRequest`。`provider=auto` 由具备能力且空闲的 Codex 或 Antigravity worker 领取；Codex 可处理 `codex-native`、`openai-api` 或 `procedural`；Antigravity 可处理 `antigravity-native`、`gemini-api` 或 `manual`。Gemini 不能成为项目构建或非图片任务的硬依赖。
 
 优先任务：
 
@@ -176,6 +176,7 @@ Codex 接手 Antigravity 工作后需要跑：
 
 ```bash
 npm run assets:validate
+npm run queue:validate
 npm run build
 npm run validate:data
 npm test

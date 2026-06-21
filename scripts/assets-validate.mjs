@@ -29,9 +29,6 @@ function detectImage(buffer) {
       height: buffer.readUInt32BE(20),
     };
   }
-  if (buffer.length >= 12 && buffer.toString('ascii', 0, 4) === 'RIFF' && buffer.toString('ascii', 8, 12) === 'WEBP') {
-    return { format: 'WEBP', mime: 'image/webp', width: null, height: null };
-  }
   if (buffer.length >= 4 && buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff) {
     const dimensions = jpegDimensions(buffer);
     return { format: 'JPEG', mime: 'image/jpeg', width: dimensions?.width ?? null, height: dimensions?.height ?? null };
@@ -66,6 +63,14 @@ function publicAssetPath(file) {
 function parseSize(size) {
   const match = String(size ?? '').toLowerCase().match(/^(\d+)x(\d+)$/);
   return match ? { width: Number(match[1]), height: Number(match[2]) } : null;
+}
+
+function expectedFormatFromExtension(file) {
+  const extension = path.extname(file).toLowerCase();
+  if (extension === '.png') return 'PNG';
+  if (extension === '.jpg' || extension === '.jpeg') return 'JPEG';
+  if (extension === '.webp') return 'WEBP_UNSUPPORTED';
+  return '';
 }
 
 function walkFiles(dir) {
@@ -112,15 +117,21 @@ function validateManifest() {
       continue;
     }
 
+    const extensionFormat = expectedFormatFromExtension(asset.file);
+    if (!extensionFormat) fail(`Unsupported asset extension: ${asset.file}`);
+    else if (extensionFormat === 'WEBP_UNSUPPORTED') fail(`WebP is not supported until dimensions are parsed: ${asset.file}`);
+    else if (extensionFormat !== detected.format) fail(`Extension/magic mismatch for ${asset.file}: extension ${extensionFormat}, file ${detected.format}`);
+
     if (!asset.mime) fail(`Manifest asset missing MIME: ${asset.file}`);
     else if (asset.mime !== detected.mime) fail(`MIME mismatch for ${asset.file}: manifest ${asset.mime}, file ${detected.mime}`);
 
     const expectedFormat = String(asset.format ?? '').toUpperCase();
-    if (expectedFormat && expectedFormat !== detected.format) fail(`Format mismatch for ${asset.file}: manifest ${expectedFormat}, file ${detected.format}`);
+    if (!expectedFormat) fail(`Manifest asset missing format: ${asset.file}`);
+    else if (expectedFormat !== detected.format) fail(`Format mismatch for ${asset.file}: manifest ${expectedFormat}, file ${detected.format}`);
 
     const size = parseSize(asset.size);
     if (!size) fail(`Invalid or missing size for ${asset.file}`);
-    else if (detected.width && detected.height && (size.width !== detected.width || size.height !== detected.height)) {
+    else if (size.width !== detected.width || size.height !== detected.height) {
       fail(`Dimension mismatch for ${asset.file}: manifest ${asset.size}, file ${detected.width}x${detected.height}`);
     }
 

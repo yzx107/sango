@@ -8,6 +8,7 @@ body:
     attributes:
       value: |
         Before starting, read `PROJECT_BRIEF.md`, `AGENTS.md`, `.ai-bridge/current-plan.md`, and `.ai-bridge/loop-state.md`.
+        Work on an `agent/<task-id>-<owner>` branch and open a PR. Do not push directly to `main`.
   - type: dropdown
     id: owner
     attributes:
@@ -70,6 +71,7 @@ body:
       description: Commands or visual checks required before handoff.
       value: |
         - npm run agent:check
+        - npm run queue:validate
         - npm run assets:validate
         - npm run build
     validations:

@@ -1,0 +1,23 @@
+{
+  "id": "review-rfc-0001-antigravity-visual-ux",
+  "requester": "codex",
+  "reviewer": "antigravity",
+  "state": "pending",
+  "scope": [
+    "docs/rfcs/0001-ai-driven-open-world.md",
+    "visual direction for strategic layer plus future local scenes",
+    "desktop and mobile UX implications for map-to-local transitions"
+  ],
+  "questions": [
+    "How can the strategic map and future local scenes share one original retro Sango visual language?",
+    "What should the first city scene abstractly look like without drifting into cinematic realism?",
+    "How should NPC memory, relationship, intent, and uncertainty appear without crowding the current strategy UI?",
+    "Which current Phase 1 UI patterns should stay visually stable while exploring AI-driven local scenes?"
+  ],
+  "acceptance": [
+    "Review is comments-only and does not modify public/assets, src, tests, package files, or current Phase 1 acceptance.",
+    "Review identifies visual and UX risks before any asset request is created.",
+    "Review recommends whether to accept, revise, or reject the visual direction in RFC-0001."
+  ],
+  "createdAt": "2026-06-21T15:35:42Z"
+}

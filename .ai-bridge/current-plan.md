@@ -1,30 +1,48 @@
 # Sango Agent Bridge Plan
 
-## 当前 S0.1 任务：ORCHESTRATION-HARDENING
+## 当前 RFC 任务：AI-DRIVEN-OPEN-WORLD
 
 Owner: Codex Game Development Agent
 
-Task ID: S0.1-ORCHESTRATION-HARDENING
+Task ID: RFC-0001-AI-OPEN-WORLD
 
-目标：修正双生图 provider、任务发现、合同校验和 PR 审查门，不修改任何游戏玩法。
+继承基线：S0.1-ORCHESTRATION-HARDENING 已合入 `main`；本 RFC 不回滚或修改该编排基础设施。
+
+目标：创建一个仅文档的 Draft PR，让 Codex 与 Antigravity 共同评审长期产品方向。
 
 范围：
 
-- `AssetRequest.owner` 支持 `unassigned`、`codex`、`antigravity`。
-- `AssetRequest.provider` 支持 `auto`、`codex-native`、`antigravity-native`、`openai-api`、`gemini-api`、`procedural`、`manual`。
-- 本地 skill 只禁止 Gemini 硬依赖，不禁止 Codex 在匹配 provider 时生图。
-- 增加 worker capability / heartbeat 合同。
-- 增加 `npm run queue:validate`，实际校验四类队列 JSON 与 worker heartbeat。
-- CI 执行 `npm run agent:loop -- --json`、`queue:validate`、`assets:validate`。
-- `agent:loop` 自动检查或初始化 `agent-task` 标签，标签不可用时显式报告。
-- WebP 暂时从支持格式移除，资产校验严格检查扩展名、MIME、magic bytes、尺寸和 sha256。
-- 后续 agent 使用 `agent/<task-id>-<owner>` 分支创建 PR，禁止直接推送 `main`。
+- 新增 `docs/rfcs/0001-ai-driven-open-world.md`，提出 AI-driven living Three Kingdoms open world 的长期方向。
+- 请求 Antigravity 对视觉语言、战略层到在地层转场、NPC 记忆/关系/意图呈现做 UX 评审。
+- Codex 提交技术可行性评审，明确 simulation-first、Action API、deterministic fallback 和固定 seed 测试边界。
+- 更新 `.ai-bridge/loop-state.md` 为 `needs_review`，`next_owner` 设置为 ChatGPT Remote Reviewer。
+- 通过 Draft PR 交给 ChatGPT Remote Reviewer 和项目 owner 审查。
+
+文件范围：
+
+- Allowed:
+  - `docs/rfcs/0001-ai-driven-open-world.md`
+  - `.ai-bridge/current-plan.md`
+  - `.ai-bridge/loop-state.md`
+  - `.ai-bridge/agent-status.md`
+  - `.ai-bridge/reviews/pending/review-rfc-0001-antigravity-visual-ux.json`
+  - `.ai-bridge/reviews/completed/review-rfc-0001-codex-feasibility.json`
+- Locked:
+  - `src/**`
+  - `tests/**`
+  - `public/assets/**`
+  - `package.json`
+  - `package-lock.json`
 
 完成后：
 
-- Codex 运行 `npm run agent:loop -- --json`、`npm run agent:check`、`npm run queue:validate`、`npm run assets:validate`、`npm run build`、`npm test`。
+- Codex 运行文档范围内的合同检查：
+  - `npm run agent:check`
+  - `npm run queue:validate`
+  - `npm run assets:validate`
+  - `npm run build`
 - Codex 更新 `.ai-bridge/agent-status.md`。
-- 推送 `agent/S0.1-ORCHESTRATION-HARDENING-codex` 并创建 PR，等待 ChatGPT / user 审查。
+- 推送 `rfc/ai-driven-open-world` 并创建 Draft PR，等待 ChatGPT Remote Reviewer、Antigravity 和项目 owner 审查。
 
 ## 当前协作模式
 
@@ -69,59 +87,41 @@ Task ID: S0.1-ORCHESTRATION-HARDENING
 3. ChatGPT 远程审查时优先读取 `AGENTS.md` 和本文件，再审查 diff。
 4. 任一 agent 完成后都要更新 `.ai-bridge/agent-status.md`，不要只在聊天里口头说明。
 
-## Antigravity 当前任务
+## Antigravity 当前 RFC Review 任务
 
 Owner: Antigravity Local Art/UI Agent
 
-目标：完成 Sango Phase 1 美术资产定稿与 UI 视觉统一。不要修改核心游戏逻辑。
+目标：仅审查 RFC-0001 的视觉与 UX 方向，不生成或替换资产，不修改核心游戏逻辑。
 
 请先读取：
 
 1. `PROJECT_BRIEF.md`
 2. `AGENTS.md`
 3. `.ai-bridge/current-plan.md`
-4. `public/assets/generated/manifest.json`
-5. `README.md`
+4. `docs/rfcs/0001-ai-driven-open-world.md`
+5. `.ai-bridge/reviews/pending/review-rfc-0001-antigravity-visual-ux.json`
 
 必做：
 
-1. 检查 7 张君主头像：
-   - 路径：`public/assets/generated/rulers/*.png`
-   - 检查刘备、曹操、孙坚、袁绍、董卓、刘焉、马腾是否风格统一、构图统一、无乱码文字、无明显生成缺陷。
-   - 特别检查袁绍、马腾头像内置文字；如果文字不合适，请裁掉或重新生成。
-2. 修正图片格式：
-   - 当前部分 `.png` 文件实际内部为 JPEG 编码。
-   - 推荐保持现有文件路径不变，转成真正 PNG。
-   - 如果改扩展名为 `.jpg`，必须同步代码引用和 manifest。
-3. 更新 `public/assets/generated/manifest.json`：
-   - 记录每张图用途、尺寸、真实格式、生成工具、提示摘要、生成批次。
-   - 不要把 Gemini 正式图写成 fallback 或占位图。
-4. 优化开局背景：
-   - 当前 `public/assets/generated/backgrounds/ruler-select.png` 像完整英文菜单截图。
-   - 请替换为原创复古战略地图氛围背景，避免可读英文、避免完整菜单 UI、避免商业游戏截图感。
-5. UI 视觉统一：
-   - 可修改 `src/styles.css`。
-   - 重点：君主选择页、顶部条、右侧城池面板、弹窗边框。
-   - 保持文字可读，不加重 CRT 模糊滤镜。
-   - 手机端不能横向溢出。
+1. 评审战略层与未来在地层是否能保持统一原创视觉语言。
+2. 评审第一个可探索城市场景应采用的抽象程度，避免写实影视化或商业游戏截图感。
+3. 评审战略地图进入在地层的桌面与移动端 UX。
+4. 评审 NPC 记忆、关系、意图和不确定信息的呈现方式，避免压垮当前策略 UI。
+5. 给出 Accept / Revise / Reject 建议和主要视觉/UX 风险。
 
 禁止：
 
-- 不要修改 `src/game/`
-- 不要修改 `src/data/`
-- 不要修改战斗、AI、命令书、存档逻辑
-- 不要提交 `dist/`、`artifacts/`、`test-results/`
+- 不要修改 `src/**`
+- 不要修改 `tests/**`
+- 不要修改 `public/assets/**`
+- 不要修改 `package.json` 或 `package-lock.json`
+- 不要创建 AssetRequest
 - 不要使用商业游戏截图、ROM 素材、原 Logo、原文案或精确 UI 布局
 
 完成后：
 
-1. 更新 `.ai-bridge/agent-status.md`，写清：
-   - 生成/替换了哪些资产
-   - 哪些文件被修改
-   - manifest 是否同步
-   - 是否还有需要 Codex 接入的问题
-   - 建议 Codex 跑哪些验证命令
-2. 停止并交给 Codex 做构建、截图和测试。
+1. 在 PR comment、review note 或 `.ai-bridge/reviews/` 中提交视觉/UX 审查结论。
+2. 停止并交给 ChatGPT Remote Reviewer 汇总评审意见。
 
 ## 必跑验收
 

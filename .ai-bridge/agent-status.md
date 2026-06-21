@@ -243,3 +243,26 @@
   - `npm test`: passed
 - Open issues: 等待 PR 上 GitHub Actions 结果与 ChatGPT Remote Reviewer 审查。
 - Next owner: ChatGPT Remote Reviewer。
+
+## Agent Update - 2026-06-21 23:35
+
+- Owner: Codex Game Development Agent
+- Goal: RFC-0001-AI-OPEN-WORLD，创建仅文档的长期产品方向 Draft PR，不修改当前玩法、美术资产或 Phase 1 验收。
+- Files changed:
+  - `docs/rfcs/0001-ai-driven-open-world.md`
+  - `.ai-bridge/current-plan.md`
+  - `.ai-bridge/loop-state.md`
+  - `.ai-bridge/agent-status.md`
+  - `.ai-bridge/reviews/pending/review-rfc-0001-antigravity-visual-ux.json`
+  - `.ai-bridge/reviews/completed/review-rfc-0001-codex-feasibility.json`
+- Assets changed: 无。
+- Validation:
+  - `npm run agent:check`: passed
+  - `npm run queue:validate`: passed
+  - `npm run assets:validate`: passed
+  - `npm run build`: passed after `npm ci` installed dependencies in the temporary worktree
+- Open issues:
+  - Antigravity 需要对 RFC 的视觉语言、战略层到在地层 UX、NPC 记忆/关系/意图呈现做评审。
+  - ChatGPT Remote Reviewer 需要审查 Draft PR 是否保持纯文档、是否不改变 Phase 1 当前验收。
+  - 若 RFC 被接受，后续 Milestone 1 必须拆成单独 implementation task，不能从本 PR 直接进入开发。
+- Next owner: ChatGPT Remote Reviewer。

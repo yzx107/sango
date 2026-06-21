@@ -1,6 +1,6 @@
 # Sango Agent Collaboration Protocol
 
-本仓库采用“远程审阅 + 本地美术 + 本地游戏开发”的三 agent 协作方式。所有 agent 都要优先遵守本文件，再读取 `.ai-bridge/current-plan.md` 和 `.ai-bridge/agent-status.md`。
+本仓库采用“远程审阅 + 本地美术 + 本地游戏开发”的三 agent 协作方式。所有 agent 都要先读取 `PROJECT_BRIEF.md` 理解项目目标，再遵守本文件，并继续读取 `.ai-bridge/current-plan.md` 和 `.ai-bridge/agent-status.md`。
 
 ## 角色边界
 
@@ -11,6 +11,7 @@
 - 默认不直接修改本地 workspace。
 - 需要关注：
   - `README.md`
+  - `PROJECT_BRIEF.md`
   - `AGENTS.md`
   - `.ai-bridge/current-plan.md`
   - `.ai-bridge/agent-status.md`
@@ -57,7 +58,7 @@
 
 ## 工作流
 
-1. 开始前读取 `AGENTS.md`、`.ai-bridge/current-plan.md`、`.ai-bridge/agent-status.md`。
+1. 开始前读取 `PROJECT_BRIEF.md`、`AGENTS.md`、`.ai-bridge/current-plan.md`、`.ai-bridge/agent-status.md`。
 2. 在 `.ai-bridge/current-plan.md` 写明本轮 owner、目标、文件范围和验收命令。
 3. 修改时只碰本轮声明的文件范围。
 4. 完成后更新 `.ai-bridge/agent-status.md`，写清：

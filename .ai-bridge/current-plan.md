@@ -10,6 +10,7 @@
 
 - 远程仓库：`https://github.com/yzx107/sango`
 - 本地工作区：`/Volumes/Data/Ryan/sango`
+- 项目介绍：`PROJECT_BRIEF.md`
 - 协作入口：`AGENTS.md`
 - 状态报告：`.ai-bridge/agent-status.md`
 - 资产清单：`public/assets/generated/manifest.json`
@@ -43,10 +44,11 @@ Owner: Antigravity Local Art/UI Agent
 
 请先读取：
 
-1. `AGENTS.md`
-2. `.ai-bridge/current-plan.md`
-3. `public/assets/generated/manifest.json`
-4. `README.md`
+1. `PROJECT_BRIEF.md`
+2. `AGENTS.md`
+3. `.ai-bridge/current-plan.md`
+4. `public/assets/generated/manifest.json`
+5. `README.md`
 
 必做：
 

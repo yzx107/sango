@@ -72,3 +72,17 @@
   - 当前 `.png` 文件内部被检测为 JPEG 编码，建议转成真正 PNG 或同步改扩展名。
   - 当前背景图含英文菜单感，建议换成无可读英文的原创复古战略地图氛围图。
 - Next owner after completion: Codex 负责构建、截图、canvas 检查和测试。
+
+## Agent Update - 2026-06-21 21:16
+
+- Owner: Codex Game Development Agent
+- Goal: 补充完整项目介绍，解决远程 ChatGPT 和 Antigravity 不知道项目是“受《霸王的大陆》启发的原创 Three.js 三国策略 Demo”的问题。
+- Files changed:
+  - `PROJECT_BRIEF.md`
+  - `AGENTS.md`
+  - `.ai-bridge/current-plan.md`
+  - `README.md`
+  - `.ai-bridge/agent-status.md`
+- Assets changed: 无。
+- Validation: 待运行 `npm run build`。
+- Next owner: Antigravity 读取 `PROJECT_BRIEF.md` 后继续美术资产定稿。
